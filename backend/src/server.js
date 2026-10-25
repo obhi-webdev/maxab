@@ -12,8 +12,8 @@ async function start() {
 
   const port = Number(process.env.PORT || 5000);
 
-  app.listen(port, () => {
-    console.log(`MAXAB Backend: http://localhost:${port}`);
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`MAXAB Backend listening on port ${port}`);
   });
 }
 
