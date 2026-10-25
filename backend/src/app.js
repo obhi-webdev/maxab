@@ -27,7 +27,7 @@ const allowedOrigins = new Set([
   "https://maxab-frontend.onrender.com",
   ...(process.env.CLIENT_URL || "")
     .split(",")
-    .map(value => value.trim().replace(/\\/$/, ""))
+    .map(value => value.trim().replace(/\/$/, ""))
     .filter(Boolean)
 ]);
 
