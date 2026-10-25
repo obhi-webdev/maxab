@@ -21,23 +21,26 @@ const app = express();
 app.disable("x-powered-by");
 
 app.use(helmet());
-const allowedOrigins = [
+const allowedOrigins = new Set([
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "https://maxab-frontend.onrender.com",
   ...(process.env.CLIENT_URL || "")
     .split(",")
-    .map(origin => origin.trim().replace(/\\/$/, ""))
+    .map(value => value.trim().replace(/\\/$/, ""))
     .filter(Boolean)
-];
+]);
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.has(origin)) {
       return callback(null, true);
     }
 
     return callback(null, false);
-  }
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json({ limit: "1mb" }));
 
