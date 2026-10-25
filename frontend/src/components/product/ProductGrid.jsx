@@ -17,7 +17,7 @@ export default function ProductGrid({
   const [categoryNames, setCategoryNames] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/categories")
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/categories`)
       .then(r => {
         if (!r.ok) throw new Error("Categories unavailable");
         return r.json();

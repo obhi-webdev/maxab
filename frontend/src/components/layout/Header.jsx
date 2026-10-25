@@ -44,7 +44,7 @@ export default function Header({
 
     const API = (
       import.meta.env.VITE_API_URL ||
-      "http://localhost:5001/api"
+      (import.meta.env.VITE_API_URL || 'http://localhost:5001/api')
     ).replace(/\/$/, "");
 
     fetch(`${API}/site-branding/public`, {

@@ -6,7 +6,7 @@ import {
 
 import "./metaTrackingSettings.css";
 
-const API = "http://localhost:5001/api";
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 export default function MetaTrackingSettings() {
   const token = sessionStorage.getItem("maxab-admin-token");

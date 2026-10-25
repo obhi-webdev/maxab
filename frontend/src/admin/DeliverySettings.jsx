@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Save, Truck } from "lucide-react";
 import "./admin.css";
 
-const API = "http://localhost:5001/api";
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 export default function DeliverySettings() {
   const token = sessionStorage.getItem("maxab-admin-token");

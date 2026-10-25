@@ -7,7 +7,7 @@ export async function trackMetaPurchase(order) {
   ) return;
 
   const response = await fetch(
-    "http://localhost:5001/api/meta-settings/public"
+    `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/meta-settings/public`
   );
 
   if (!response.ok) return;

@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import "./admin.css";
 
-const API = "http://localhost:5001/api";
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 const emptyProduct = {
   name: "",
@@ -121,7 +121,7 @@ function ProductForm({ product, onSave, onCancel, saving, token }) {
   const [availableCategories, setAvailableCategories] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/categories")
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/categories`)
       .then(response => {
         if (!response.ok) throw new Error("Categories unavailable");
         return response.json();
@@ -167,7 +167,7 @@ function ProductForm({ product, onSave, onCancel, saving, token }) {
         data.append("image", file);
 
         const response = await fetch(
-          "http://localhost:5001/api/upload/product-image",
+          `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/upload/product-image`,
           {
             method: "POST",
             headers: {

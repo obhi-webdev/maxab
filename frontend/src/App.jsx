@@ -29,7 +29,7 @@ function Storefront() {
     async function load() {
       try {
         const response = await fetch(
-          "http://localhost:5001/api/products"
+          `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/products`
         );
 
         if (!response.ok) {

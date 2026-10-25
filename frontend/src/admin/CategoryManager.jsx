@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, Plus, Trash2, Pencil, Save, Upload } from "lucide-react";
 import "./admin.css";
 
-const API = "http://localhost:5001/api";
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 const empty = {
   name: "",
