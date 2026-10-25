@@ -1,0 +1,37 @@
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Builds
+dist/
+build/
+.next/
+coverage/
+.vite/
+
+# Local backups
+*.bak
+*.backup
+*backup-*
+*before-*
+backup*/
+
+# Logs and OS files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Runtime uploads
+backend/uploads/
+frontend/uploads/
+
+# Editors
+.vscode/
+.idea/

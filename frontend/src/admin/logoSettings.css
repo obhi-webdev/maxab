@@ -1,0 +1,145 @@
+.maxab-logo-page {
+  min-height: 100vh;
+  padding: 38px 20px 70px;
+  background: #f5f8f5;
+  color: #183a28;
+}
+
+.maxab-logo-container {
+  max-width: 860px;
+  margin: auto;
+}
+
+.maxab-logo-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #328351;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.maxab-logo-heading {
+  margin: 34px 0 27px;
+}
+
+.maxab-logo-heading span {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #398354;
+  font-weight: 800;
+}
+
+.maxab-logo-heading h1 {
+  font-size: clamp(27px, 4vw, 37px);
+  margin: 9px 0;
+}
+
+.maxab-logo-heading p {
+  color: #77877b;
+  font-size: 14px;
+}
+
+.maxab-logo-card {
+  background: white;
+  border: 1px solid #e0eae1;
+  border-radius: 14px;
+  padding: 30px;
+}
+
+.maxab-logo-card h2 {
+  font-size: 18px;
+  margin: 0 0 22px;
+}
+
+.maxab-logo-preview {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: #f4f7f4;
+  background-image: linear-gradient(
+    45deg, #ebf0eb 25%, transparent 25%,
+    transparent 75%, #ebf0eb 75%
+  ), linear-gradient(
+    45deg, #ebf0eb 25%, transparent 25%,
+    transparent 75%, #ebf0eb 75%
+  );
+  background-position: 0 0, 12px 12px;
+  background-size: 24px 24px;
+  border: 1px dashed #cbdacb;
+  border-radius: 10px;
+}
+
+.maxab-logo-preview img {
+  display: block;
+  max-height: 145px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.maxab-logo-placeholder {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  color: #95a397;
+  font-size: 13px;
+}
+
+.maxab-logo-file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  margin-top: 22px;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #287e49;
+  background: #edf7ef;
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.maxab-logo-file input {
+  display: none;
+}
+
+.maxab-logo-hint {
+  font-size: 12px;
+  color: #86968a;
+  margin: 12px 0 25px;
+}
+
+.maxab-logo-save {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 25px;
+  border: 0;
+  border-radius: 8px;
+  background: #298d4c;
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.maxab-logo-save:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.maxab-logo-error {
+  color: #ba3333;
+  font-size: 13px;
+}
+
+.maxab-logo-success {
+  color: #258348;
+  font-size: 13px;
+}

@@ -1,0 +1,227 @@
+.maxab-meta-page {
+  min-height: 100vh;
+  background: #f6f9f6;
+  color: #203b2b;
+  padding: 36px 20px 80px;
+}
+
+.maxab-meta-container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.maxab-meta-back {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: #268b4d;
+  font-size: 13px;
+}
+
+.maxab-meta-heading {
+  margin: 35px 0;
+}
+
+.maxab-meta-heading > span {
+  color: #268b4d;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.maxab-meta-heading h1 {
+  font-size: clamp(26px, 4vw, 36px);
+  margin: 12px 0;
+}
+
+.maxab-meta-heading p {
+  color: #819184;
+  font-size: 14px;
+}
+
+.maxab-meta-layout {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.maxab-meta-card {
+  background: #fff;
+  border: 1px solid #e1eae1;
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.maxab-meta-card h2 {
+  margin: 0 0 26px;
+  font-size: 21px;
+}
+
+.maxab-meta-card > label:not(.maxab-meta-switch) {
+  display: block;
+  margin: 23px 0 10px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.maxab-meta-card input[type="text"],
+.maxab-meta-card input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #dbe6dc;
+  border-radius: 7px;
+  outline-color: #268b4d;
+  font: inherit;
+  font-size: 14px;
+}
+
+.maxab-meta-card small {
+  display: block;
+  font-size: 11px;
+  color: #8a998d;
+  margin-top: 8px;
+}
+
+.maxab-meta-token {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dbe6dc;
+  border-radius: 7px;
+}
+
+.maxab-meta-token input {
+  border: none !important;
+  min-width: 0;
+}
+
+.maxab-meta-token button {
+  border: 0;
+  background: transparent;
+  padding: 12px;
+  color: #698470;
+}
+
+.maxab-meta-switch {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 30px 0 25px;
+  padding: 18px;
+  background: #f1f8f2;
+  border-radius: 8px;
+}
+
+.maxab-meta-switch input {
+  width: 20px;
+  height: 20px;
+  accent-color: #268b4d;
+}
+
+.maxab-meta-switch strong,
+.maxab-meta-switch span {
+  display: block;
+}
+
+.maxab-meta-switch strong {
+  font-size: 13px;
+}
+
+.maxab-meta-switch span {
+  margin-top: 5px;
+  color: #839285;
+  font-size: 11px;
+}
+
+.maxab-meta-save {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  background: #268b4d;
+  color: white;
+  padding: 16px;
+  border: 0;
+  border-radius: 7px;
+  font-weight: 750;
+}
+
+.maxab-meta-save:disabled {
+  opacity: .5;
+}
+
+.maxab-meta-status > svg {
+  color: #268b4d;
+}
+
+.maxab-meta-status h2 {
+  margin-top: 18px;
+}
+
+.maxab-meta-status > div:not(.maxab-meta-security) {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid #edf1ed;
+  font-size: 13px;
+}
+
+.maxab-meta-status > div > span {
+  color: #819184;
+}
+
+.maxab-meta-status strong {
+  font-size: 12px;
+}
+
+.maxab-meta-security {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #eef8f0;
+  color: #267c47;
+  margin-top: 20px;
+}
+
+.maxab-meta-security p,
+.maxab-meta-footnote {
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.maxab-meta-footnote {
+  color: #839185;
+  margin-top: 20px;
+}
+
+.maxab-meta-error,
+.maxab-meta-notice {
+  border-radius: 7px;
+  padding: 13px;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.maxab-meta-error {
+  background: #fff0f0;
+  color: #ae3d3d;
+}
+
+.maxab-meta-notice {
+  background: #e8f6eb;
+  color: #287c47;
+}
+
+@media(max-width:800px) {
+  .maxab-meta-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .maxab-meta-card {
+    padding: 20px;
+  }
+}

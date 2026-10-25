@@ -1,0 +1,41 @@
+.maxab-cursor-circle,
+.maxab-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  border-radius: 50%;
+  will-change: transform;
+  transition: opacity .2s ease, background .2s ease;
+}
+
+.maxab-cursor-circle {
+  width: 42px;
+  height: 42px;
+  border: 1.6px solid #438d62;
+  background: rgba(67, 141, 98, .025);
+}
+
+.maxab-cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: #438d62;
+}
+
+.maxab-cursor-circle.visible,
+.maxab-cursor-dot.visible {
+  opacity: 1;
+}
+
+.maxab-cursor-circle.hover {
+  background: rgba(67, 141, 98, .12);
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .maxab-cursor-circle,
+  .maxab-cursor-dot {
+    display: none;
+  }
+}
