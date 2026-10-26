@@ -323,3 +323,19 @@
   background: none !important;
 }
 
+
+/* MAXAB HERO CTA POSITION START */
+
+.maxab-hero-slider .maxab-hero-content .maxab-hero-cta {
+  position: relative !important;
+  top: 35px !important;
+  margin-top: 28px !important;
+}
+
+@media (max-width: 768px) {
+  .maxab-hero-slider .maxab-hero-content .maxab-hero-cta {
+    top: 20px !important;
+  }
+}
+
+/* MAXAB HERO CTA POSITION END */
