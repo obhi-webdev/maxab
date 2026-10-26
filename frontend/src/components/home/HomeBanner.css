@@ -326,15 +326,32 @@
 
 /* MAXAB HERO CTA POSITION START */
 
-.maxab-hero-slider .maxab-hero-content .maxab-hero-cta {
-  position: relative !important;
-  top: 35px !important;
-  margin-top: 28px !important;
+/* Anchor the button near the banner's bottom edge */
+.maxab-hero-slider .maxab-hero-slide .maxab-hero-cta {
+  position: absolute !important;
+  left: clamp(32px, 6vw, 90px) !important;
+  bottom: 58px !important;
+  top: auto !important;
+  margin: 0 !important;
+  transform: none;
+  z-index: 6;
+}
+
+.maxab-hero-slider .maxab-hero-slide .maxab-hero-cta:hover {
+  transform: translateY(-3px);
 }
 
 @media (max-width: 768px) {
-  .maxab-hero-slider .maxab-hero-content .maxab-hero-cta {
-    top: 20px !important;
+  .maxab-hero-slider .maxab-hero-slide .maxab-hero-cta {
+    left: 38px !important;
+    bottom: 55px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .maxab-hero-slider .maxab-hero-slide .maxab-hero-cta {
+    left: 27px !important;
+    bottom: 52px !important;
   }
 }
 
