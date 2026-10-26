@@ -90,7 +90,15 @@ export async function sendMetaPurchase(order, context = {}) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ data: [event] }),
+      body: JSON.stringify({
+        data: [event],
+        ...(process.env.META_TEST_EVENT_CODE?.trim()
+          ? {
+              test_event_code:
+                process.env.META_TEST_EVENT_CODE.trim()
+            }
+          : {})
+      }),
       signal: AbortSignal.timeout(5000)
     }
   );
