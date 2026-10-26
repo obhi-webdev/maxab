@@ -225,3 +225,36 @@
     padding: 20px;
   }
 }
+
+/* MAXAB Meta CAPI Test Events */
+.maxab-meta-test-section {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid rgba(34, 97, 63, 0.14);
+  border-radius: 16px;
+  background: rgba(34, 97, 63, 0.035);
+}
+
+.maxab-meta-test-section h3 {
+  margin: 0 0 18px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.maxab-meta-test-section > label:not(.maxab-meta-switch) {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.maxab-meta-test-section > input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.maxab-meta-test-section > small {
+  display: block;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}

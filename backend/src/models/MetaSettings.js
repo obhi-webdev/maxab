@@ -18,6 +18,15 @@ const schema = new mongoose.Schema({
   enabled: {
     type: Boolean,
     default: false
+  },
+  testEventCode: {
+    type: String,
+    default: "",
+    select: false
+  },
+  testMode: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

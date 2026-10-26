@@ -14,6 +14,8 @@ export default function MetaTrackingSettings() {
   const [pixelId, setPixelId] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [enabled, setEnabled] = useState(false);
+  const [testEventCode, setTestEventCode] = useState("");
+  const [testMode, setTestMode] = useState(false);
   const [tokenConfigured, setTokenConfigured] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -43,6 +45,8 @@ export default function MetaTrackingSettings() {
         setPixelId(result.data.pixelId || "");
         setEnabled(result.data.enabled);
         setTokenConfigured(result.data.tokenConfigured);
+        setTestEventCode(result.data.testEventCode || "");
+        setTestMode(Boolean(result.data.testMode));
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
@@ -58,7 +62,9 @@ export default function MetaTrackingSettings() {
     try {
       const payload = {
         pixelId: pixelId.trim(),
-        enabled
+        enabled,
+        testEventCode: testEventCode.trim(),
+        testMode
       };
 
       // Blank token means keep the previous token.
@@ -84,6 +90,8 @@ export default function MetaTrackingSettings() {
       setPixelId(result.data.pixelId);
       setEnabled(result.data.enabled);
       setTokenConfigured(result.data.tokenConfigured);
+      setTestEventCode(result.data.testEventCode || "");
+      setTestMode(Boolean(result.data.testMode));
       setAccessToken("");
       setShowToken(false);
       setNotice("Meta Pixel settings saved successfully.");
@@ -197,6 +205,52 @@ export default function MetaTrackingSettings() {
               </div>
             </label>
 
+            <div className="maxab-meta-test-section">
+              <h3>Conversions API Test Events</h3>
+
+              <label htmlFor="maxab-test-event-code">
+                Test Event Code
+              </label>
+
+              <input
+                id="maxab-test-event-code"
+                type="text"
+                autoComplete="off"
+                spellCheck={false}
+                placeholder="TEST12345"
+                value={testEventCode}
+                onChange={event =>
+                  setTestEventCode(event.target.value)
+                }
+                disabled={busy || loading}
+              />
+
+              <small>
+                Copy this code from Meta Events Manager,
+                under Test Events. Leave it blank when
+                testing is not required.
+              </small>
+
+              <label className="maxab-meta-switch">
+                <input
+                  type="checkbox"
+                  checked={testMode}
+                  onChange={event =>
+                    setTestMode(event.target.checked)
+                  }
+                  disabled={busy || loading}
+                />
+
+                <div>
+                  <strong>Enable Test Mode</strong>
+                  <span>
+                    Attach the saved Test Event Code to
+                    server-side Purchase events.
+                  </span>
+                </div>
+              </label>
+            </div>
+
             <button
               className="maxab-meta-save"
               disabled={busy || loading}
@@ -229,6 +283,13 @@ export default function MetaTrackingSettings() {
               <span>Tracking</span>
               <strong>
                 {enabled ? "Enabled in settings" : "Disabled"}
+              </strong>
+            </div>
+
+            <div>
+              <span>CAPI Test Mode</span>
+              <strong>
+                {testMode ? "Enabled" : "Disabled"}
               </strong>
             </div>
 

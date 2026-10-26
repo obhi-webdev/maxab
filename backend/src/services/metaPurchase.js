@@ -33,7 +33,7 @@ function hash(value) {
 export async function sendMetaPurchase(order, context = {}) {
   const settings = await MetaSettings.findOne({
     key: "meta"
-  }).select("+encryptedToken");
+  }).select("+encryptedToken +testEventCode");
 
   if (
     !settings?.enabled ||
@@ -92,11 +92,8 @@ export async function sendMetaPurchase(order, context = {}) {
       },
       body: JSON.stringify({
         data: [event],
-        ...(process.env.META_TEST_EVENT_CODE?.trim()
-          ? {
-              test_event_code:
-                process.env.META_TEST_EVENT_CODE.trim()
-            }
+        ...(settings.testMode && settings.testEventCode
+          ? { test_event_code: settings.testEventCode }
           : {})
       }),
       signal: AbortSignal.timeout(5000)

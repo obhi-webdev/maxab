@@ -42,7 +42,9 @@ function safeSettings(settings) {
   return {
     pixelId: settings?.pixelId || "",
     enabled: Boolean(settings?.enabled),
-    tokenConfigured: Boolean(settings?.encryptedToken)
+    tokenConfigured: Boolean(settings?.encryptedToken),
+    testEventCode: settings?.testEventCode || "",
+    testMode: Boolean(settings?.testMode)
   };
 }
 
@@ -70,7 +72,7 @@ router.get("/", requireAdmin, async (req, res, next) => {
   try {
     const settings = await MetaSettings
       .findOne({ key: "meta" })
-      .select("+encryptedToken");
+      .select("+encryptedToken +testEventCode");
 
     res.json({
       success: true,
@@ -84,7 +86,13 @@ router.get("/", requireAdmin, async (req, res, next) => {
 // Admin: save settings
 router.put("/", requireAdmin, async (req, res, next) => {
   try {
-    const { pixelId, accessToken, enabled } = req.body || {};
+    const {
+      pixelId,
+      accessToken,
+      enabled,
+      testEventCode,
+      testMode
+    } = req.body || {};
 
     if (
       typeof pixelId !== "string" ||
@@ -92,7 +100,12 @@ router.put("/", requireAdmin, async (req, res, next) => {
       typeof enabled !== "boolean" ||
       (accessToken !== undefined &&
         (typeof accessToken !== "string" ||
-         accessToken.length > 4096))
+         accessToken.length > 4096)) ||
+      (testEventCode !== undefined &&
+        (typeof testEventCode !== "string" ||
+         (testEventCode.trim() !== "" &&
+          !/^TEST[0-9A-Za-z_-]{1,100}$/.test(testEventCode.trim())))) ||
+      (testMode !== undefined && typeof testMode !== "boolean")
     ) {
       return res.status(400).json({
         success: false,
@@ -115,6 +128,28 @@ router.put("/", requireAdmin, async (req, res, next) => {
       );
     }
 
+    if (testEventCode !== undefined) {
+      updated.testEventCode = testEventCode.trim();
+    }
+
+    if (testMode !== undefined) {
+      updated.testMode = testMode;
+    }
+
+    if (updated.testMode === true) {
+      const activeCode =
+        updated.testEventCode ??
+        current?.testEventCode ??
+        "";
+
+      if (!activeCode) {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a Test Event Code before enabling Test Mode"
+        });
+      }
+    }
+
     const hasToken = Boolean(
       updated.encryptedToken || current?.encryptedToken
     );
@@ -134,7 +169,7 @@ router.put("/", requireAdmin, async (req, res, next) => {
         upsert: true,
         runValidators: true
       }
-    ).select("+encryptedToken");
+    ).select("+encryptedToken +testEventCode");
 
     res.json({
       success: true,
