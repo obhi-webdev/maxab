@@ -870,6 +870,7 @@ function OrdersPanel({ token }) {
                 <th>Amount</th>
                 <th>Delivery</th>
                 <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -928,6 +929,23 @@ function OrdersPanel({ token }) {
                   </td>
 
                   <td>
+
+                    <select
+                      className={`order-status status-${order.status}`}
+                      value={order.status}
+                      disabled={updating === order._id}
+                      onChange={e =>
+                        changeStatus(order, e.target.value)
+                      }
+                    >
+                      {statuses.map(status => (
+                        <option key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
                     <button
                       type="button"
                       onClick={() => deleteOrder(order)}
@@ -952,20 +970,6 @@ function OrdersPanel({ token }) {
                         ? "Processing..."
                         : "Delete Order"}
                     </button>
-                    <select
-                      className={`order-status status-${order.status}`}
-                      value={order.status}
-                      disabled={updating === order._id}
-                      onChange={e =>
-                        changeStatus(order, e.target.value)
-                      }
-                    >
-                      {statuses.map(status => (
-                        <option key={status} value={status}>
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </option>
-                      ))}
-                    </select>
                   </td>
                 </tr>
               ))}
