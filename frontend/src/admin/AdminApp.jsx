@@ -688,6 +688,56 @@ function OrdersPanel({ token }) {
     loadOrders();
   }, [token]);
 
+  // MAXAB_ADMIN_DELETE_ORDER
+  async function deleteOrder(order) {
+    const confirmation = window.prompt(
+      `Permanently delete order ${order.orderNumber}?\\n` +
+      `Type ${order.orderNumber} to confirm.`
+    );
+
+    if (confirmation !== order.orderNumber) {
+      return;
+    }
+
+    setUpdating(order._id);
+
+    try {
+      const API =
+        import.meta.env.VITE_API_URL ||
+        "http://localhost:5001/api";
+
+      const response = await fetch(
+        `${API}/orders/${encodeURIComponent(order._id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to delete order");
+      }
+
+      setOrders(previous =>
+        previous.filter(item => item._id !== order._id)
+      );
+
+      setSelectedOrder(previous =>
+        previous?._id === order._id ? null : previous
+      );
+
+      window.alert(`Order ${order.orderNumber} deleted.`);
+    } catch (error) {
+      window.alert(error.message || "Order deletion failed");
+    } finally {
+      setUpdating(null);
+    }
+  }
+
   async function changeStatus(order, status) {
     if (order.status === status) return;
 
@@ -878,6 +928,30 @@ function OrdersPanel({ token }) {
                   </td>
 
                   <td>
+                    <button
+                      type="button"
+                      onClick={() => deleteOrder(order)}
+                      disabled={updating === order._id}
+                      title={`Permanently delete ${order.orderNumber}`}
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        padding: "8px 12px",
+                        border: "1px solid #fecaca",
+                        borderRadius: "8px",
+                        background: "#fff1f2",
+                        color: "#be123c",
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        cursor: updating === order._id
+                          ? "not-allowed"
+                          : "pointer"
+                      }}
+                    >
+                      {updating === order._id
+                        ? "Processing..."
+                        : "Delete Order"}
+                    </button>
                     <select
                       className={`order-status status-${order.status}`}
                       value={order.status}
