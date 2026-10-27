@@ -168,7 +168,16 @@ export default function ProductImagesManager() {
       ));
 
       setFiles([]);
-      setNotice("Product images saved successfully.");
+      const warnings = body.data?.deleteWarnings || [];
+      const deleted = body.data?.deletedFromImageKit?.length || 0;
+
+      setNotice(
+        `Product images saved. ${deleted} file(s) deleted from ImageKit.`
+      );
+
+      if (warnings.length) {
+        setError(warnings.join(" "));
+      }
     } catch (err) {
       // Keep uploaded URLs visible so retrying does not
       // need to upload the same files again.

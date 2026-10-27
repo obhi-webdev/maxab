@@ -1,4 +1,5 @@
 import { Router } from "express";
+import ImageAsset from "../models/ImageAsset.js";
 import multer from "multer";
 import ImageKit, { toFile } from "@imagekit/nodejs";
 import { fileTypeFromBuffer } from "file-type";
@@ -70,6 +71,14 @@ router.post(
         file: await toFile(req.file.buffer, fileName),
         fileName,
         folder: "/MAXAB/products"
+      });
+
+      // Store exact ImageKit file ID for safe future deletion.
+      // If the registry cannot be saved, leave the uploaded
+      // file on ImageKit rather than losing its identity.
+      await ImageAsset.create({
+        url: result.url,
+        fileId: result.fileId
       });
 
       return res.status(201).json({
