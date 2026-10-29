@@ -1,3 +1,4 @@
+import PromoOffer from "./components/home/PromoOffer";
 import SEO from "./components/seo/SEO";
 import HomeBanner from "./components/home/HomeBanner";
 import { useEffect, useState } from "react";
@@ -171,7 +172,8 @@ function Storefront() {
             </div>
           </section>
         ) : (
-          <ProductGrid
+          <>
+<ProductGrid
             products={liveProducts}
             loading={productsLoading}
             error={productsError}
@@ -181,6 +183,8 @@ function Storefront() {
             wishlist={wishlist}
             onWishlist={toggleWishlist}
           />
+            <PromoOffer />
+          </>
         )}
 
         <section className="store-benefits">
