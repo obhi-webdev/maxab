@@ -1,0 +1,365 @@
+/* MAXAB — Premium Hero Slider */
+
+.maxab-hero-section {
+  background: #fff;
+  padding: 22px 0 28px;
+}
+
+.maxab-hero-container {
+  width: min(1440px, 94%);
+  margin: 0 auto;
+}
+
+.maxab-hero-slider,
+.maxab-hero-empty {
+  position: relative;
+  width: 100%;
+  min-height: 410px;
+  height: clamp(410px, 35vw, 545px);
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #172a21;
+  box-shadow: 0 12px 34px rgba(16, 39, 25, .08);
+}
+
+.maxab-hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  z-index: 0;
+  visibility: hidden;
+  transition:
+    opacity 1.1s ease,
+    visibility 1.1s;
+}
+
+.maxab-hero-slide.is-active {
+  opacity: 1;
+  z-index: 1;
+  visibility: visible;
+}
+
+.maxab-hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.035);
+  transition: transform 6s ease;
+}
+
+.maxab-hero-slide.is-active .maxab-hero-image {
+  transform: scale(1);
+}
+
+.maxab-hero-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 22, 17, .82) 0%,
+    rgba(10, 22, 17, .53) 42%,
+    rgba(10, 22, 17, .08) 85%
+  );
+}
+
+.maxab-hero-content,
+.maxab-hero-empty-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 55px clamp(32px, 6vw, 90px);
+  color: #fff;
+}
+
+.maxab-hero-kicker {
+  display: block;
+  color: #d3e6d6;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  margin-bottom: 17px;
+}
+
+.maxab-hero-content h1,
+.maxab-hero-empty-content h1 {
+  color: white;
+  font-family: Inter, "Hind Siliguri", sans-serif;
+  font-size: clamp(32px, 4.2vw, 58px);
+  font-weight: 800;
+  letter-spacing: -1.6px;
+  line-height: 1.13;
+  margin: 0 0 18px;
+}
+
+.maxab-hero-content p,
+.maxab-hero-empty-content p {
+  color: #f1f5f1;
+  max-width: 490px;
+  line-height: 1.8;
+  font-size: clamp(13px, 1.2vw, 16px);
+  margin: 0;
+}
+
+.maxab-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  margin-top: 28px;
+  padding: 15px 24px;
+  background: #fff;
+  color: #183626;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    background .25s,
+    transform .25s;
+}
+
+.maxab-hero-cta:hover {
+  background: #e9f5ec;
+  transform: translateY(-2px);
+}
+
+.maxab-hero-arrow {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.5);
+  background: rgba(255,255,255,.18);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.maxab-hero-arrow:hover {
+  background: rgba(255,255,255,.35);
+}
+
+.maxab-hero-arrow.is-prev {
+  left: 14px;
+}
+
+.maxab-hero-arrow.is-next {
+  right: 14px;
+}
+
+.maxab-hero-dots {
+  position: absolute;
+  z-index: 5;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.maxab-hero-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: rgba(255,255,255,.5);
+  transition: width .3s, background .3s;
+  cursor: pointer;
+}
+
+.maxab-hero-dots button.active {
+  width: 29px;
+  background: #fff;
+}
+
+.maxab-hero-counter {
+  position: absolute;
+  z-index: 5;
+  right: 29px;
+  bottom: 24px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.maxab-hero-counter span {
+  opacity: .55;
+}
+
+.maxab-hero-empty {
+  background: linear-gradient(
+    120deg,
+    #172f20,
+    #3f6448 60%,
+    #97b29e
+  );
+}
+
+.maxab-hero-empty-content small {
+  margin-top: 18px;
+  color: #d0e0d2;
+}
+
+@media(max-width: 768px) {
+  .maxab-hero-section {
+    padding: 14px 0 22px;
+  }
+
+  .maxab-hero-container {
+    width: 94%;
+  }
+
+  .maxab-hero-slider,
+  .maxab-hero-empty {
+    height: 420px;
+    min-height: 420px;
+    border-radius: 12px;
+  }
+
+  .maxab-hero-shade {
+    background: linear-gradient(
+      90deg,
+      rgba(10,22,17,.78),
+      rgba(10,22,17,.35)
+    );
+  }
+
+  .maxab-hero-content,
+  .maxab-hero-empty-content {
+    padding: 48px 38px;
+  }
+
+  .maxab-hero-content h1,
+  .maxab-hero-empty-content h1 {
+    font-size: clamp(28px, 7vw, 42px);
+  }
+
+  .maxab-hero-arrow {
+    width: 34px;
+    height: 34px;
+  }
+
+  .maxab-hero-arrow.is-prev {
+    left: 5px;
+  }
+
+  .maxab-hero-arrow.is-next {
+    right: 5px;
+  }
+}
+
+@media(max-width: 480px) {
+  .maxab-hero-slider,
+  .maxab-hero-empty {
+    height: 390px;
+    min-height: 390px;
+  }
+
+  .maxab-hero-content,
+  .maxab-hero-empty-content {
+    padding: 38px 27px;
+  }
+
+  .maxab-hero-content h1,
+  .maxab-hero-empty-content h1 {
+    font-size: 29px;
+    letter-spacing: -.6px;
+  }
+
+  .maxab-hero-content p {
+    font-size: 12px;
+  }
+
+  .maxab-hero-cta {
+    padding: 13px 18px;
+  }
+
+  .maxab-hero-counter {
+    display: none;
+  }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .maxab-hero-slide,
+  .maxab-hero-image,
+  .maxab-hero-cta,
+  .maxab-hero-dots button {
+    transition: none;
+  }
+}
+
+/* MAXAB Hero Slider — Original Image Colors */
+
+.maxab-hero-shade {
+  display: none !important;
+  background: transparent !important;
+}
+
+.maxab-hero-image {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.maxab-hero-slide::before,
+.maxab-hero-slide::after {
+  background: none !important;
+}
+
+
+/* MAXAB HERO CTA POSITION START */
+
+/* Anchor the button near the banner's bottom edge */
+.maxab-hero-slider .maxab-hero-slide .maxab-hero-cta {
+  position: absolute !important;
+  left: clamp(32px, 6vw, 90px) !important;
+  bottom: 58px !important;
+  top: auto !important;
+  margin: 0 !important;
+  transform: none;
+  z-index: 6;
+}
+
+.maxab-hero-slider .maxab-hero-slide .maxab-hero-cta:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .maxab-hero-slider .maxab-hero-slide .maxab-hero-cta {
+    left: 38px !important;
+    bottom: 55px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .maxab-hero-slider .maxab-hero-slide .maxab-hero-cta {
+    left: 27px !important;
+    bottom: 52px !important;
+  }
+}
+
+/* MAXAB HERO CTA POSITION END */
+
+/* MAXAB HERO SLIDER SURROUNDING BACKGROUND */
+.maxab-hero-slider {
+  background-color: #06452B !important;
+}
+
+/* Keep original banner images and overlays unchanged */

@@ -22,7 +22,7 @@
   letter-spacing: -1.5px;
 }
 
-.store-page-logo span { color: #328957; }
+.store-page-logo span { color: #06452B; }
 
 .store-subpage-header > a:last-child {
   display: flex;
@@ -83,7 +83,7 @@
 }
 
 .detail-thumbnails button.active {
-  border-color: #328957;
+  border-color: #06452B;
 }
 
 .detail-thumbnails img {
@@ -96,7 +96,7 @@
 
 .detail-category {
   font-size: 12px;
-  color: #328957;
+  color: #06452B;
   font-weight: 700;
 }
 
@@ -115,7 +115,7 @@
 
 .detail-price strong {
   font-size: 31px;
-  color: #328957;
+  color: #06452B;
 }
 
 .detail-price del { color: #9aa89d; }
@@ -189,7 +189,7 @@
 
 .detail-add-cart {
   border: 1px solid #328957;
-  color: #328957;
+  color: #06452B;
   background: white;
 }
 
@@ -227,7 +227,7 @@
 .checkout-heading { margin-bottom: 30px; }
 
 .checkout-heading > span {
-  color: #328957;
+  color: #06452B;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
@@ -282,7 +282,7 @@
   border-radius: 6px;
   color: #28392d;
   background: white;
-  outline-color: #328957;
+  outline-color: #06452B;
   font: inherit;
   font-size: 14px;
 }
@@ -341,7 +341,7 @@
   font-size: 20px;
 }
 
-.checkout-grand strong { color: #328957; }
+.checkout-grand strong { color: #06452B; }
 
 .checkout-submit {
   border: 0;
@@ -386,7 +386,7 @@
 .store-page-message a {
   display: inline-block;
   margin-top: 20px;
-  color: #328957;
+  color: #06452B;
   font-weight: 700;
 }
 
@@ -398,7 +398,7 @@
   border: 1px solid #e4ece4;
   border-radius: 13px;
   text-align: center;
-  color: #328957;
+  color: #06452B;
 }
 
 .checkout-success h1 { color: #243b2b; }
@@ -459,7 +459,7 @@
 }
 
 .tracking-heading svg {
-  color: #328957;
+  color: #06452B;
 }
 
 .tracking-heading h1 {
@@ -556,7 +556,7 @@
 }
 
 .tracking-step.complete {
-  color: #328957;
+  color: #06452B;
   font-weight: 700;
 }
 
@@ -591,13 +591,13 @@
 }
 
 .tracking-total strong {
-  color: #328957;
+  color: #06452B;
 }
 
 .tracking-store-back {
   display: inline-block;
   margin-top: 18px;
-  color: #328957;
+  color: #06452B;
   font-size: 13px;
 }
 
@@ -627,5 +627,5 @@
   height: 18px;
   flex-shrink: 0;
   margin-top: 2px;
-  accent-color: #328957;
+  accent-color: #06452B;
 }

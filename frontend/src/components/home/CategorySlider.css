@@ -3,7 +3,18 @@
 .maxab-loop-section {
   width: 100%;
   padding: 50px 0 65px;
-  background: #f8fbf8;
+  background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(20, 126, 68, 0.28),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #031f14 0%,
+      #053b25 50%,
+      #021f14 100%
+    );
   overflow: hidden;
 }
 
@@ -287,4 +298,10 @@
 /* MAXAB PREMIUM CATEGORY HEIGHT END */
 
 
+
+
+/* MAXAB SHOP BY CATEGORY WHITE HEADING */
+#category .maxab-loop-header h2 {
+  color: #FFFFFF !important;
+}
 

@@ -1,7 +1,18 @@
 /* MAXAB — Premium Hero Slider */
 
 .maxab-hero-section {
-  background: #fff;
+  background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(20, 126, 68, 0.28),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #031f14 0%,
+      #053b25 50%,
+      #021f14 100%
+    );
   padding: 22px 0 28px;
 }
 
@@ -356,3 +367,11 @@
 }
 
 /* MAXAB HERO CTA POSITION END */
+
+/* MAXAB HERO SLIDER SURROUNDING BACKGROUND */
+.maxab-hero-slider {
+  background-color: #06452B !important;
+}
+
+/* Keep original banner images and overlays unchanged */
+

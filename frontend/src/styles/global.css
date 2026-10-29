@@ -854,7 +854,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   font-size: 10px;
   letter-spacing: 2px;
   font-weight: 800;
-  color: #328957;
+  color: #06452B;
 }
 
 .dynamic-category-heading h2 {
@@ -868,7 +868,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #328957;
+  color: #06452B;
   font-weight: 700;
 }
 
@@ -1235,3 +1235,67 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 }
 
 /* MAXAB PREMIUM HOVER EFFECTS END */
+
+
+/* MAXAB DARK GREEN HEADER START */
+
+/* Header outer background */
+body #root .site-header {
+  background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(20, 126, 68, 0.28),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #031f14 0%,
+      #053b25 50%,
+      #021f14 100%
+    ) !important;
+}
+
+/* Main header uses the same green background */
+body #root .site-header .header-main {
+  background: transparent !important;
+}
+
+/* Navigation background */
+body #root .site-header .navigation-wrapper {
+  background: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* Navigation text */
+body #root .site-header .main-nav a {
+  color: #e5f5ea !important;
+}
+
+/* Header tools and icons */
+body #root .site-header .header-tool,
+body #root .site-header .contact-tool,
+body #root .site-header .mobile-menu-toggle {
+  color: #e5f5ea !important;
+}
+
+body #root .site-header .header-tools svg,
+body #root .site-header .mobile-menu-toggle svg {
+  color: #e5f5ea !important;
+}
+
+/* Text logo fallback */
+body #root .site-header .site-logo {
+  color: #ffffff !important;
+}
+
+/* Search box stays white for readability */
+body #root .site-header .header-search {
+  background: #ffffff !important;
+}
+
+/* Search icon */
+body #root .site-header .header-search button svg {
+  color: #ffffff !important;
+}
+
+/* MAXAB DARK GREEN HEADER END */
