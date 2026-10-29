@@ -376,12 +376,18 @@
 /* Keep original banner images and overlays unchanged */
 
 
-
-/* MAXAB UNIFIED HERO CATEGORY BACKGROUND START */
-
+/* MAXAB MATCHING PREMIUM GREEN BACKGROUND START */
 .maxab-hero-section {
-  background: #042b1c !important;
-  padding-bottom: 28px;
+  background: radial-gradient(
+    circle at 75% 35%,
+    rgba(20, 126, 68, 0.28),
+    transparent 45%
+  ),
+  linear-gradient(
+    135deg,
+    #031f14 0%,
+    #053b25 50%,
+    #021f14 100%
+  ) !important;
 }
-
-/* MAXAB UNIFIED HERO CATEGORY BACKGROUND END */
+/* MAXAB MATCHING PREMIUM GREEN BACKGROUND END */
