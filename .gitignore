@@ -35,3 +35,8 @@ frontend/uploads/
 # Editors
 .vscode/
 .idea/
+
+# Local backups
+*.bak
+*.bak.*
+*.bak-*
