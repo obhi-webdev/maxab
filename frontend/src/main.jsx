@@ -1,3 +1,4 @@
+import "./styles/darkGreenTheme.css";
 import ProductPageLayout from "./pages/ProductPageLayout";
 import LogoSettings from "./admin/LogoSettings";
 import MetaTrackingSettings from "./admin/MetaTrackingSettings";

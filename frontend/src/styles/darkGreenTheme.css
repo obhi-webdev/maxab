@@ -1,0 +1,44 @@
+/* MAXAB PREMIUM DARK GREEN THEME */
+
+:root {
+  --maxab-dark-green: #06452B;
+  --maxab-green-hover: #04351F;
+  --maxab-green-light: #EAF3ED;
+  --maxab-green-border: #BCD6C4;
+}
+
+/* Main website buttons */
+body #root button:not(.admin-delete):not(.maxab-meta-save):not(.maxab-promo-button) {
+  accent-color: var(--maxab-dark-green);
+}
+
+/* Buttons with existing green backgrounds */
+body #root button[style*="background"],
+body #root .admin-primary {
+  accent-color: var(--maxab-dark-green);
+}
+
+/* Product add to cart */
+body #root .product-card button {
+  border-color: var(--maxab-green-border);
+}
+
+/* Interactive green icons */
+body #root .site-header svg,
+body #root .product-card button svg,
+body #root .store-benefits svg {
+  color: var(--maxab-dark-green);
+}
+
+/* Active and selected elements */
+body #root input[type="checkbox"],
+body #root input[type="radio"] {
+  accent-color: var(--maxab-dark-green);
+}
+
+/* Accessible focus styles */
+body #root button:focus-visible,
+body #root a:focus-visible {
+  outline: 2px solid var(--maxab-dark-green);
+  outline-offset: 3px;
+}
