@@ -78,9 +78,6 @@ export default function ProductCard({
       </div>
 
       <div className="shop-product-info">
-        <span className="shop-category">
-          {product.category}
-        </span>
 
         <h3>
           <a href={`/product/${product.slug}`}>
