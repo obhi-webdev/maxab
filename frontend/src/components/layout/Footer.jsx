@@ -19,7 +19,7 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Shop All", href: "/#shop" },
   { label: "Categories", href: "/#category" },
-  { label: "About MAXAB", href: "/#about" }
+  { label: "About MAXPRODUCT", href: "/#about" }
 ];
 
 const customerLinks = [
@@ -57,14 +57,14 @@ export default function Footer() {
 
             <div>
               <span className="mxft-eyebrow">
-                THE MAXAB CLUB
+                THE MAXPRODUCT CLUB
               </span>
 
               <h2>Stay Updated, Stay Inspired!</h2>
 
               <p>
                 Discover new arrivals, exclusive offers
-                and everyday essentials from MAXAB.
+                and everyday essentials from MAXPRODUCT.
               </p>
             </div>
           </div>
@@ -103,13 +103,13 @@ export default function Footer() {
 
             <div className="mxft-brand">
               <a href="/" className="mxft-brand-logo">
-                MAXAB<span>.</span>
+                MAXPRODUCT<span>.</span>
               </a>
 
               <p className="mxft-brand-description">
                 Discover better everyday essentials.
                 From smart gadgets to lifestyle
-                favorites, shop smarter with MAXAB.
+                favorites, shop smarter with MAXPRODUCT.
               </p>
 
               <div className="mxft-brand-tagline">
@@ -141,7 +141,7 @@ export default function Footer() {
             />
 
             <div className="mxft-column">
-              <h3>SHOPPING WITH MAXAB</h3>
+              <h3>SHOPPING WITH MAXPRODUCT</h3>
 
               <div className="mxft-service-item">
                 <Truck size={17} />
@@ -196,7 +196,7 @@ export default function Footer() {
 
           <div className="mxft-bottom">
             <p>
-              © {new Date().getFullYear()} MAXAB.
+              © {new Date().getFullYear()} MAXPRODUCT.
               All rights reserved.
             </p>
 

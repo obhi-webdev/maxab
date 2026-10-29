@@ -10,6 +10,10 @@ const siteBrandingSchema = new mongoose.Schema(
     logoUrl: {
       type: String,
       default: ""
+    },
+    faviconUrl: {
+      type: String,
+      default: ""
     }
   },
   { timestamps: true }

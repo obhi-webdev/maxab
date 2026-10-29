@@ -70,7 +70,7 @@ export default function PromoOffer() {
 
           <span className="maxab-promo-eyebrow">
             <Flame size={16} />
-            MAXAB EXCLUSIVE OFFER
+            MAXPRODUCT EXCLUSIVE OFFER
           </span>
 
           <h2 className="maxab-promo-discount">
@@ -86,7 +86,7 @@ export default function PromoOffer() {
 
           <p className="maxab-promo-description">
             আপনার পছন্দের স্মার্ট গ্যাজেট ও প্রয়োজনীয়
-            লাইফস্টাইল প্রোডাক্ট এখন MAXAB-এ।
+            লাইফস্টাইল প্রোডাক্ট এখন MAXPRODUCT-এ।
             পছন্দের প্রোডাক্টটি দেখুন এবং সহজেই অর্ডার করুন।
           </p>
 
@@ -119,7 +119,7 @@ export default function PromoOffer() {
             <div className="maxab-promo-product-image">
               <img
                 src={image}
-                alt={product?.name || "MAXAB featured product"}
+                alt={product?.name || "MAXPRODUCT featured product"}
                 loading="lazy"
               />
             </div>
@@ -132,7 +132,7 @@ export default function PromoOffer() {
           <div className="maxab-promo-sticker">
             <BadgePercent size={25} />
             <strong>
-              {hasDiscount ? `${discount}% OFF` : "MAXAB"}
+              {hasDiscount ? `${discount}% OFF` : "MAXPRODUCT"}
             </strong>
             <span>
               {hasDiscount ? "SPECIAL DEAL" : "TOP PICKS"}

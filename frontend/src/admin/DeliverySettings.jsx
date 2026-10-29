@@ -5,7 +5,7 @@ import "./admin.css";
 const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 export default function DeliverySettings() {
-  const token = sessionStorage.getItem("maxab-admin-token");
+  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
 
   const [inside, setInside] = useState("");
   const [outside, setOutside] = useState("");
@@ -84,7 +84,7 @@ export default function DeliverySettings() {
         </div>
 
         <h1>Delivery Settings</h1>
-        <p>Manage your MAXAB checkout delivery charges.</p>
+        <p>Manage your MAXPRODUCT checkout delivery charges.</p>
 
         {error && <div className="admin-error">{error}</div>}
         {message && <div className="admin-notice">{message}</div>}

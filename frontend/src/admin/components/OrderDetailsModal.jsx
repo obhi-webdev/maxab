@@ -1,172 +1,333 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   X,
-  UserRound,
-  Phone,
-  MapPin,
-  Package,
-  CreditCard,
-  CalendarDays,
-  Truck
+  Download,
+  Printer,
+  ArrowLeft,
+  CheckCircle2
 } from "lucide-react";
+import "./premiumInvoice.css";
 
-const money = amount =>
-  `৳${Number(amount || 0).toLocaleString("en-BD")}`;
+const money = value =>
+  `৳${Number(value || 0).toLocaleString("en-BD", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+
+const dateText = value => {
+  if (!value) return "N/A";
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime())
+    ? "N/A"
+    : date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+};
 
 export default function OrderDetailsModal({ order, onClose }) {
+  const invoiceRef = useRef(null);
+  const [downloading, setDownloading] = useState(false);
+  const [pdfError, setPdfError] = useState("");
+
   useEffect(() => {
     if (!order) return;
 
-    const closeOnEscape = event => {
+    const onKeyDown = event => {
       if (event.key === "Escape") onClose();
     };
 
-    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("keydown", onKeyDown);
 
     return () =>
-      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("keydown", onKeyDown);
   }, [order, onClose]);
 
   if (!order) return null;
 
   const customer = order.customer || {};
+  const items = Array.isArray(order.items) ? order.items : [];
+
+  const totalQuantity = items.reduce(
+    (total, item) => total + Number(item.quantity || 0),
+    0
+  );
+
+  const orderNumber = String(order.orderNumber || "N/A");
+
+  const paymentMethod =
+    order.paymentMethod === "COD"
+      ? "Cash on Delivery"
+      : order.paymentMethod || "Cash on Delivery";
+
+  const status = String(order.status || "pending");
+
+  async function downloadPDF() {
+    if (!invoiceRef.current || downloading) return;
+
+    setDownloading(true);
+    setPdfError("");
+
+    try {
+      const module = await import("html2pdf.js");
+      const html2pdf = module.default;
+
+      const safeOrderNumber = orderNumber.replace(
+        /[^a-zA-Z0-9_-]/g,
+        "_"
+      );
+
+      const options = {
+        margin: [8, 8, 8, 8],
+        filename: `MAXPRODUCT-Invoice-${safeOrderNumber}.pdf`,
+        image: {
+          type: "jpeg",
+          quality: 0.98
+        },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          scrollY: 0
+        },
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation: "portrait"
+        },
+        pagebreak: {
+          mode: ["css", "legacy"],
+          avoid: [".mp-invoice-totals", ".mp-invoice-footer"]
+        }
+      };
+
+      await html2pdf()
+        .set(options)
+        .from(invoiceRef.current)
+        .save();
+    } catch (error) {
+      console.error("Invoice PDF error:", error);
+      setPdfError(
+        "Unable to generate PDF. Please try Print Invoice."
+      );
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   return (
     <div
-      className="maxab-modal-overlay"
+      className="maxab-modal-overlay mp-invoice-overlay"
       onMouseDown={event => {
-        if (event.target === event.currentTarget) {
-          onClose();
-        }
+        if (event.target === event.currentTarget) onClose();
       }}
     >
       <section
-        className="maxab-order-modal"
+        className="maxab-order-modal mp-invoice-modal"
         role="dialog"
         aria-modal="true"
-        aria-label={`Order ${order.orderNumber} details`}
+        aria-label={`Invoice for order ${orderNumber}`}
       >
-        <header className="maxab-modal-header">
-          <div>
-            <span>ORDER DETAILS</span>
-            <h2>{order.orderNumber}</h2>
+        <div className="mp-invoice-toolbar">
+          <div className="mp-invoice-toolbar-heading">
+            <span>ORDER MANAGEMENT</span>
+            <h2>Order Invoice</h2>
           </div>
 
-          <button onClick={onClose} aria-label="Close order details">
-            <X size={22}/>
+          <button
+            type="button"
+            className="mp-invoice-close"
+            onClick={onClose}
+            aria-label="Close invoice"
+          >
+            <X size={20}/>
           </button>
-        </header>
-
-        <div className="maxab-modal-body">
-
-          <div className="maxab-order-meta">
-            <span>
-              <CalendarDays size={16}/>
-              {new Date(order.createdAt).toLocaleString("en-BD")}
-            </span>
-
-            <span className={`maxab-order-status ${order.status}`}>
-              {order.status}
-            </span>
-          </div>
-
-          <div className="maxab-detail-section">
-            <h3><UserRound size={19}/> Customer Information</h3>
-
-            <div className="maxab-detail-row">
-              <span>Customer Name</span>
-              <strong>{customer.name}</strong>
-            </div>
-
-            <div className="maxab-detail-row">
-              <span>Phone Number</span>
-              <a href={`tel:${customer.phone}`}>
-                <Phone size={14}/> {customer.phone}
-              </a>
-            </div>
-
-            <div className="maxab-detail-row">
-              <span>District</span>
-              <strong>{customer.district}</strong>
-            </div>
-
-            <div className="maxab-detail-address">
-              <MapPin size={18}/>
-              <div>
-                <small>Delivery Address</small>
-                <p>{customer.address}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="maxab-detail-section">
-            <h3><Package size={19}/> Ordered Products</h3>
-
-            {(order.items || []).map((item, index) => (
-              <div className="maxab-order-item" key={index}>
-                <div>
-                  <strong>{item.name}</strong>
-                  <small>Quantity: {item.quantity}</small>
-                  <small>Unit Price: {money(item.price)}</small>
-                </div>
-
-                <strong>{money(item.price * item.quantity)}</strong>
-              </div>
-            ))}
-          </div>
-
-          <div className="maxab-detail-section">
-            <h3><Truck size={19}/> Delivery & Payment</h3>
-
-            <div className="maxab-detail-row">
-              <span>Delivery Area</span>
-              <strong>
-                {customer.deliveryArea === "inside"
-                  ? "Inside City"
-                  : "Outside City"}
-              </strong>
-            </div>
-
-            <div className="maxab-detail-row">
-              <span>Payment Method</span>
-              <strong><CreditCard size={15}/> Cash on Delivery</strong>
-            </div>
-          </div>
-
-          <div className="maxab-order-bill">
-            <div>
-              <span>Subtotal</span>
-              <strong>{money(order.subtotal)}</strong>
-            </div>
-
-            <div>
-              <span>Delivery Charge</span>
-              <strong>{money(order.deliveryCharge)}</strong>
-            </div>
-
-            <div className="maxab-order-grand">
-              <span>Total Bill</span>
-              <strong>{money(order.total)}</strong>
-            </div>
-          </div>
         </div>
 
-        <footer className="maxab-modal-footer">
+        <div className="mp-invoice-scroll">
+          <article className="mp-invoice-sheet" ref={invoiceRef}>
+            <div className="mp-invoice-top">
+              <div>
+                <div className="mp-invoice-brand">
+                  MAXPRODUCT
+                </div>
+                <div className="mp-invoice-tagline">
+                  EVERYDAY ESSENTIALS
+                </div>
+              </div>
+
+              <div className="mp-invoice-title">
+                <h1>INVOICE</h1>
+                <span>#{orderNumber}</span>
+              </div>
+            </div>
+
+            <div className="mp-invoice-accent"/>
+
+            <div className="mp-invoice-information">
+              <div className="mp-invoice-customer">
+                <span className="mp-invoice-label">
+                  BILL TO
+                </span>
+
+                <h3>{customer.name || "Customer"}</h3>
+
+                <p>{customer.phone || "N/A"}</p>
+
+                <p>
+                  {[
+                    customer.address,
+                    customer.district
+                  ].filter(Boolean).join(", ") || "N/A"}
+                </p>
+              </div>
+
+              <div className="mp-invoice-order-info">
+                <div>
+                  <span>Invoice Date</span>
+                  <strong>{dateText(order.createdAt)}</strong>
+                </div>
+
+                <div>
+                  <span>Order Number</span>
+                  <strong>{orderNumber}</strong>
+                </div>
+
+                <div>
+                  <span>Payment Method</span>
+                  <strong>{paymentMethod}</strong>
+                </div>
+
+                <div>
+                  <span>Order Status</span>
+                  <strong className="mp-invoice-status">
+                    {status.toUpperCase()}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="mp-invoice-table-wrap">
+              <table className="mp-invoice-table">
+                <thead>
+                  <tr>
+                    <th>PRODUCT DESCRIPTION</th>
+                    <th>QTY</th>
+                    <th>UNIT PRICE</th>
+                    <th>AMOUNT</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {items.map((item, index) => (
+                    <tr key={`${item.product || index}-${index}`}>
+                      <td>
+                        <strong>{item.name || "Product"}</strong>
+                      </td>
+                      <td>{item.quantity}</td>
+                      <td>{money(item.price)}</td>
+                      <td>
+                        {money(
+                          Number(item.price || 0) *
+                          Number(item.quantity || 0)
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mp-invoice-summary">
+              <div className="mp-invoice-summary-note">
+                <div className="mp-invoice-payment-label">
+                  <CheckCircle2 size={17}/>
+                  CASH ON DELIVERY
+                </div>
+
+                <p>
+                  Payment is collected upon delivery.
+                  This invoice does not confirm payment.
+                </p>
+
+                <p>
+                  Total Items: <strong>{totalQuantity}</strong>
+                </p>
+              </div>
+
+              <div className="mp-invoice-totals">
+                <div>
+                  <span>Subtotal</span>
+                  <strong>{money(order.subtotal)}</strong>
+                </div>
+
+                <div>
+                  <span>Delivery Charge</span>
+                  <strong>{money(order.deliveryCharge)}</strong>
+                </div>
+
+                <div className="mp-invoice-grand">
+                  <span>Grand Total</span>
+                  <strong>{money(order.total)}</strong>
+                </div>
+              </div>
+            </div>
+
+            <footer className="mp-invoice-footer">
+              <strong>Thank you for shopping with MAXPRODUCT.</strong>
+              <p>
+                This invoice was generated from your order
+                information. Please keep it for reference.
+              </p>
+
+              <div className="mp-invoice-footer-bottom">
+                <span>MAXPRODUCT</span>
+                <span>ORDER #{orderNumber}</span>
+              </div>
+            </footer>
+          </article>
+        </div>
+
+        {pdfError && (
+          <p className="mp-invoice-error" role="alert">
+            {pdfError}
+          </p>
+        )}
+
+        <div className="mp-invoice-actions">
           <button
             type="button"
-            className="maxab-print-invoice"
-            onClick={() => window.print()}
-          >
-            Print Invoice / Save PDF
-          </button>
-          <button
-            type="button"
-            className="maxab-close-details"
+            className="mp-invoice-back"
             onClick={onClose}
           >
-            Close Details
+            <ArrowLeft size={16}/>
+            Back
           </button>
-        </footer>
+
+          <div className="mp-invoice-action-right">
+            <button
+              type="button"
+              className="mp-invoice-print"
+              onClick={() => window.print()}
+            >
+              <Printer size={17}/>
+              Print Invoice
+            </button>
+
+            <button
+              type="button"
+              className="mp-invoice-download"
+              onClick={downloadPDF}
+              disabled={downloading}
+            >
+              <Download size={17}/>
+              {downloading ? "Generating PDF..." : "Download PDF"}
+            </button>
+          </div>
+        </div>
       </section>
     </div>
   );

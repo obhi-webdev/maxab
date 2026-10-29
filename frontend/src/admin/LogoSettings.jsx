@@ -1,53 +1,205 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Upload, Save, Image } from "lucide-react";
+import {
+  ArrowLeft,
+  Upload,
+  Save,
+  Image,
+  Trash2,
+  Globe
+} from "lucide-react";
+import { applySiteFavicon } from "../utils/siteFavicon";
 import "./logoSettings.css";
 
 const API = (
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.VITE_API_URL || 'http://localhost:5001/api')
+  "http://localhost:5001/api"
 ).replace(/\/$/, "");
+
+const ALLOWED = ["image/png", "image/jpeg", "image/webp"];
+const MAX_SIZE = 5 * 1024 * 1024;
 
 export default function LogoSettings() {
   const [logoUrl, setLogoUrl] = useState("");
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState("");
+  const [faviconUrl, setFaviconUrl] = useState("");
+
+  const [logoFile, setLogoFile] = useState(null);
+  const [faviconFile, setFaviconFile] = useState(null);
+
+  const [logoPreview, setLogoPreview] = useState("");
+  const [faviconPreview, setFaviconPreview] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // Keep original authentication key.
+  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
 
-  async function deleteLogo() {
-    if (!logoUrl || saving || loading) return;
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
-    if (!window.confirm(
-      "Delete the current website logo? The default MAXAB logo will appear."
-    )) return;
+    const controller = new AbortController();
+
+    fetch(`${API}/site-branding`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      signal: controller.signal
+    })
+      .then(async response => {
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.message || "Cannot load brand settings"
+          );
+        }
+
+        setLogoUrl(result.data?.logoUrl || "");
+        setFaviconUrl(result.data?.faviconUrl || "");
+      })
+      .catch(err => {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [token]);
+
+  useEffect(() => {
+    if (!logoFile) {
+      setLogoPreview("");
+      return;
+    }
+
+    const url = URL.createObjectURL(logoFile);
+    setLogoPreview(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [logoFile]);
+
+  useEffect(() => {
+    if (!faviconFile) {
+      setFaviconPreview("");
+      return;
+    }
+
+    const url = URL.createObjectURL(faviconFile);
+    setFaviconPreview(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [faviconFile]);
+
+  function chooseImage(event, target) {
+    const selected = event.target.files?.[0];
+
+    if (!selected) return;
+
+    if (!ALLOWED.includes(selected.type)) {
+      setError("Select a PNG, JPG or WebP image.");
+      event.target.value = "";
+      return;
+    }
+
+    if (selected.size > MAX_SIZE) {
+      setError("Maximum file size is 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setError("");
+    setMessage("");
+
+    if (target === "favicon") {
+      setFaviconFile(selected);
+    } else {
+      setLogoFile(selected);
+    }
+
+    event.target.value = "";
+  }
+
+  async function uploadImage(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch(`${API}/upload/product-image`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.data?.url) {
+      throw new Error(result.message || "Image upload failed");
+    }
+
+    return result.data.url;
+  }
+
+  async function saveBranding(url, isFavicon) {
+    const endpoint = isFavicon
+      ? `${API}/site-branding/favicon`
+      : `${API}/site-branding`;
+
+    const payload = isFavicon
+      ? { faviconUrl: url }
+      : { logoUrl: url };
+
+    const response = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Could not save settings");
+    }
+
+    return result.data;
+  }
+
+  async function saveImage(isFavicon) {
+    const selected = isFavicon ? faviconFile : logoFile;
+    if (!selected || !token || saving || loading) return;
 
     setSaving(true);
     setError("");
     setMessage("");
 
     try {
-      const response = await fetch(`${API}/site-branding`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ logoUrl: "" })
-      });
+      const url = await uploadImage(selected);
+      const data = await saveBranding(url, isFavicon);
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Unable to delete logo");
+      if (isFavicon) {
+        const savedUrl = data.faviconUrl || url;
+        setFaviconUrl(savedUrl);
+        setFaviconFile(null);
+        applySiteFavicon(savedUrl);
+        setMessage("Website favicon saved successfully.");
+      } else {
+        setLogoUrl(data.logoUrl || url);
+        setLogoFile(null);
+        setMessage("Website logo saved successfully.");
       }
-
-      setLogoUrl("");
-      setFile(null);
-      setPreview("");
-      setMessage("Website logo deleted successfully.");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,121 +207,34 @@ export default function LogoSettings() {
     }
   }
 
-  const token = sessionStorage.getItem("maxab-admin-token");
+  async function deleteImage(isFavicon) {
+    const currentUrl = isFavicon ? faviconUrl : logoUrl;
 
-  useEffect(() => {
-  
-  if (!token) {
-      setLoading(false);
-      return;
-    }
+    if (!currentUrl || !token || saving || loading) return;
 
-    fetch(`${API}/site-branding`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(async response => {
-        const result = await response.json();
+    const label = isFavicon ? "favicon" : "logo";
 
-        if (!response.ok) {
-          throw new Error(result.message || "Cannot load logo");
-        }
-
-        setLogoUrl(result.data.logoUrl || "");
-      })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [token]);
-
-  useEffect(() => {
-    if (!file) {
-      setPreview("");
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
-
-  function selectFile(event) {
-    const selected = event.target.files?.[0];
-    if (!selected) return;
-
-    if (
-      !["image/png", "image/jpeg", "image/webp"].includes(selected.type)
-    ) {
-      setError("Please select PNG, JPG or WebP image.");
-      event.target.value = "";
-      return;
-    }
-
-    if (selected.size > 5 * 1024 * 1024) {
-      setError("Maximum image size is 5 MB.");
-      event.target.value = "";
-      return;
-    }
-
-    setError("");
-    setMessage("");
-    setFile(selected);
-  }
-
-  async function saveLogo() {
-    if (!file || !token || saving) return;
+    if (!window.confirm(
+      `Delete current website ${label}?`
+    )) return;
 
     setSaving(true);
     setError("");
     setMessage("");
 
     try {
-      const formData = new FormData();
-      formData.append("image", file);
+      await saveBranding("", isFavicon);
 
-      const uploadResponse = await fetch(
-        `${API}/upload/product-image`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          body: formData
-        }
-      );
-
-      const uploadResult = await uploadResponse.json();
-
-      if (!uploadResponse.ok || !uploadResult.data?.url) {
-        throw new Error(
-          uploadResult.message || "Image upload failed"
-        );
+      if (isFavicon) {
+        setFaviconUrl("");
+        setFaviconFile(null);
+        applySiteFavicon("");
+      } else {
+        setLogoUrl("");
+        setLogoFile(null);
       }
 
-      const url = uploadResult.data.url;
-
-      const saveResponse = await fetch(
-        `${API}/site-branding`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ logoUrl: url })
-        }
-      );
-
-      const saveResult = await saveResponse.json();
-
-      if (!saveResponse.ok) {
-        throw new Error(
-          saveResult.message || "Could not save website logo"
-        );
-      }
-
-      setLogoUrl(saveResult.data.logoUrl);
-      setFile(null);
-      setMessage("Website logo saved successfully!");
+      setMessage(`Website ${label} removed successfully.`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -189,27 +254,42 @@ export default function LogoSettings() {
   return (
     <main className="maxab-logo-page">
       <div className="maxab-logo-container">
-        <a href="/admin/dashboard" className="maxab-logo-back">
+        <a
+          href="/admin/dashboard"
+          className="maxab-logo-back"
+        >
           <ArrowLeft size={17}/>
           Back to Dashboard
         </a>
 
         <div className="maxab-logo-heading">
-          <span>MAXAB BRAND SETTINGS</span>
-          <h1>Website Logo</h1>
+          <span>MAXPRODUCT BRAND SETTINGS</span>
+          <h1>Website Logo & Favicon</h1>
           <p>
-            Upload and manage your website's brand logo.
+            Manage your website logo and browser tab icon.
           </p>
         </div>
 
+        {error && (
+          <p className="maxab-logo-error" role="alert">
+            {error}
+          </p>
+        )}
+
+        {message && (
+          <p className="maxab-logo-success" role="status">
+            {message}
+          </p>
+        )}
+
         <div className="maxab-logo-card">
-          <h2>Current Logo</h2>
+          <h2>Website Logo</h2>
 
           <div className="maxab-logo-preview">
-            {(preview || logoUrl) ? (
+            {(logoPreview || logoUrl) ? (
               <img
-                src={preview || logoUrl}
-                alt="MAXAB website logo preview"
+                src={logoPreview || logoUrl}
+                alt="MAXPRODUCT website logo preview"
               />
             ) : (
               <div className="maxab-logo-placeholder">
@@ -219,30 +299,15 @@ export default function LogoSettings() {
             )}
           </div>
 
-          {loading && <p>Loading current logo...</p>}
-
-          {Boolean(logoUrl) && (
-            <button
-              type="button"
-              className="maxab-logo-delete"
-              onClick={deleteLogo}
-              disabled={saving || loading}
-            >
-              Delete Logo
-            </button>
-          )}
-
-
-
           <label className="maxab-logo-file">
             <Upload size={19}/>
             <span>
-              {file ? file.name : "Choose New Logo"}
+              {logoFile ? logoFile.name : "Choose New Logo"}
             </span>
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp"
-              onChange={selectFile}
+              onChange={event => chooseImage(event, "logo")}
               disabled={saving || loading}
             />
           </label>
@@ -252,19 +317,101 @@ export default function LogoSettings() {
             Maximum file size: 5 MB.
           </p>
 
-          {error && <p className="maxab-logo-error">{error}</p>}
-          {message && <p className="maxab-logo-success">{message}</p>}
+          <div className="maxproduct-brand-actions">
+            <button
+              type="button"
+              className="maxab-logo-save"
+              disabled={!logoFile || saving || loading}
+              onClick={() => saveImage(false)}
+            >
+              <Save size={18}/>
+              {saving ? "Processing..." : "Save Website Logo"}
+            </button>
 
-          <button
-            type="button"
-            className="maxab-logo-save"
-            onClick={saveLogo}
-            disabled={!file || saving || loading}
-          >
-            <Save size={18}/>
-            {saving ? "Uploading & Saving..." : "Save Website Logo"}
-          </button>
+            {Boolean(logoUrl) && (
+              <button
+                type="button"
+                className="maxab-logo-delete"
+                disabled={saving || loading}
+                onClick={() => deleteImage(false)}
+              >
+                <Trash2 size={17}/>
+                Delete Logo
+              </button>
+            )}
+          </div>
         </div>
+
+        <div className="maxab-logo-card maxproduct-favicon-card">
+          <h2>
+            <Globe size={21}/>
+            Website Favicon
+          </h2>
+
+          <p className="maxproduct-favicon-description">
+            Upload the small icon displayed in browser tabs.
+          </p>
+
+          <div className="maxproduct-favicon-preview">
+            {(faviconPreview || faviconUrl) ? (
+              <img
+                src={faviconPreview || faviconUrl}
+                alt="Current website favicon"
+              />
+            ) : (
+              <div className="maxproduct-favicon-empty">
+                <Globe size={28}/>
+                <span>No favicon uploaded</span>
+              </div>
+            )}
+          </div>
+
+          <label className="maxab-logo-file">
+            <Upload size={19}/>
+            <span>
+              {faviconFile
+                ? faviconFile.name
+                : "Choose Favicon Image"}
+            </span>
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={event => chooseImage(event, "favicon")}
+              disabled={saving || loading}
+            />
+          </label>
+
+          <p className="maxab-logo-hint">
+            Recommended: Square PNG, 512 × 512 px.
+            Maximum file size: 5 MB.
+          </p>
+
+          <div className="maxproduct-brand-actions">
+            <button
+              type="button"
+              className="maxab-logo-save"
+              disabled={!faviconFile || saving || loading}
+              onClick={() => saveImage(true)}
+            >
+              <Save size={18}/>
+              {saving ? "Processing..." : "Save Favicon"}
+            </button>
+
+            {Boolean(faviconUrl) && (
+              <button
+                type="button"
+                className="maxab-logo-delete"
+                disabled={saving || loading}
+                onClick={() => deleteImage(true)}
+              >
+                <Trash2 size={17}/>
+                Delete Favicon
+              </button>
+            )}
+          </div>
+        </div>
+
+        {loading && <p>Loading brand settings...</p>}
       </div>
     </main>
   );

@@ -40,3 +40,25 @@ frontend/uploads/
 *.bak
 *.bak.*
 *.bak-*
+
+# Sensitive environment files
+.env
+.env.*
+!.env.example
+
+# Local backups
+backups/
+*.bak
+*.bak.*
+*.bak-*
+
+# Sensitive environment files
+.env
+.env.*
+!.env.example
+
+# Local backups
+backups/
+*.bak
+*.bak.*
+*.bak-*

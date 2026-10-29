@@ -1,0 +1,101 @@
+
+/* MAXAB MINIMAL ADMIN DASHBOARD THEME */
+
+.admin-layout,
+.admin-dashboard {
+  background: #f8fafc;
+  color: #1e293b;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+.admin-sidebar-logo {
+  color: #14532d !important;
+  font-weight: 800;
+}
+
+.admin-sidebar-link {
+  color: #475569 !important;
+  background: transparent;
+  border-radius: 8px;
+  transition: background .2s ease;
+}
+
+.admin-sidebar-link:hover {
+  background: #f1f5f9 !important;
+  color: #14532d !important;
+}
+
+.admin-sidebar-link.selected,
+.admin-sidebar-link.active {
+  background: #eaf5ee !important;
+  color: #14532d !important;
+  font-weight: 700;
+}
+
+/* Main area */
+.admin-main {
+  background: #f8fafc !important;
+  color: #1e293b;
+}
+
+/* Cards and statistics */
+.admin-stat,
+.admin-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.admin-stat-grid {
+  gap: 16px;
+}
+
+/* Tables */
+.admin-main table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.admin-main th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+}
+
+.admin-main td,
+.admin-main th {
+  border-bottom: 1px solid #edf2f7;
+  padding: 12px 14px;
+}
+
+.admin-main tr:hover td {
+  background: #fafcfb;
+}
+
+/* Form controls */
+.admin-main input,
+.admin-main select,
+.admin-main textarea {
+  border: 1px solid #dce4e0;
+  border-radius: 8px;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+  .admin-main {
+    padding: 18px !important;
+  }
+
+  .admin-stat-grid {
+    gap: 10px;
+  }
+}

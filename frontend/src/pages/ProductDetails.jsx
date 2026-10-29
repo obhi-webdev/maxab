@@ -1,3 +1,4 @@
+import { trackMetaEvent, metaProductData } from "../services/metaPixel";
 import { useEffect, useState } from "react";
 import {
   ChevronRight, ChevronLeft, Plus, Minus,
@@ -32,6 +33,31 @@ export default function ProductDetails() {
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+
+  useEffect(() => {
+    if (!product?._id) return;
+
+    const sendView = () => {
+      trackMetaEvent(
+        "ViewContent",
+        metaProductData(product)
+      );
+    };
+
+    sendView();
+
+    window.addEventListener(
+      "maxproduct-meta-consent-change",
+      sendView
+    );
+
+    return () => window.removeEventListener(
+      "maxproduct-meta-consent-change",
+      sendView
+    );
+  }, [product]);
+
+
 
   useEffect(() => {
     let alive = true;
@@ -86,7 +112,7 @@ export default function ProductDetails() {
       <div className="maxab-pdp-state">
         <Package size={44}/>
         <h2>{error || "Product unavailable"}</h2>
-        <a href="/">Back to MAXAB</a>
+        <a href="/">Back to MAXPRODUCT</a>
       </div>
     );
   }
@@ -115,9 +141,7 @@ export default function ProductDetails() {
   function addQuantity() {
     if (!inStock) return;
 
-    for (let i = 0; i < quantity; i++) {
-      addToCart(cartProduct);
-    }
+    addToCart({ ...cartProduct, quantity });
 
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
@@ -126,9 +150,7 @@ export default function ProductDetails() {
   function buyNow() {
     if (!inStock) return;
 
-    for (let i = 0; i < quantity; i++) {
-      addToCart(cartProduct);
-    }
+    addToCart({ ...cartProduct, quantity });
 
     window.location.assign("/checkout");
   }
@@ -144,9 +166,9 @@ export default function ProductDetails() {
   return (
     <div className="maxab-pdp-page">
       <SEO
-        title={`${product.name} | MAXAB`}
+        title={`${product.name} | MAXPRODUCT`}
         description={
-          (product.description || `Buy ${product.name} from MAXAB.`)
+          (product.description || `Buy ${product.name} from MAXPRODUCT.`)
             .slice(0, 160)
         }
         image={images[0] || ""}
@@ -251,14 +273,14 @@ export default function ProductDetails() {
 
             <div className="maxab-pdp-category">
               <Tag size={15}/>
-              {product.category || "MAXAB COLLECTION"}
+              {product.category || "MAXPRODUCT COLLECTION"}
             </div>
 
             <h1>{product.name}</h1>
 
             <div className="maxab-pdp-meta">
               <span>
-                SKU: {product.sku || product.slug || "MAXAB"}
+                SKU: {product.sku || product.slug || "MAXPRODUCT"}
               </span>
               <span className="maxab-pdp-meta-separator">•</span>
               <span>{product.category || "Products"}</span>
@@ -296,7 +318,7 @@ export default function ProductDetails() {
 
             <p className="maxab-pdp-description">
               {product.description ||
-                "Discover this quality product at MAXAB. Shop with confidence and enjoy convenient home delivery."}
+                "Discover this quality product at MAXPRODUCT. Shop with confidence and enjoy convenient home delivery."}
             </p>
 
             <div className="maxab-pdp-quantity-section">

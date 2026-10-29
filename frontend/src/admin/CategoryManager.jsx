@@ -28,7 +28,7 @@ async function api(path, token, options = {}) {
 }
 
 export default function CategoryManager() {
-  const token = sessionStorage.getItem("maxab-admin-token");
+  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
 
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState(empty);
@@ -195,7 +195,7 @@ export default function CategoryManager() {
 
         <div className="category-admin-heading">
           <div>
-            <span>MAXAB STORE MANAGEMENT</span>
+            <span>MAXPRODUCT STORE MANAGEMENT</span>
             <h1>Product Categories</h1>
             <p>Manage categories, homepage banners and display order.</p>
           </div>

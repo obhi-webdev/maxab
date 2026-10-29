@@ -8,7 +8,7 @@ export default function ProductImage({ src, alt, className = "" }) {
     return (
       <div className={`image-placeholder ${className}`}>
         <Package size={40} strokeWidth={1.2} />
-        <span>MAXAB COLLECTION</span>
+        <span>MAXPRODUCT COLLECTION</span>
       </div>
     );
   }

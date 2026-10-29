@@ -81,14 +81,14 @@ export default function HomeBanner() {
   return (
     <section
       className="maxab-hero-section"
-      aria-label="MAXAB featured collections"
+      aria-label="MAXPRODUCT featured collections"
     >
       <div className="maxab-hero-container">
         {banners.length === 0 ? (
           <div className="maxab-hero-empty">
             <div className="maxab-hero-empty-content">
               <span className="maxab-hero-kicker">
-                WELCOME TO MAXAB
+                WELCOME TO MAXPRODUCT
               </span>
               <h1>
                 Discover Better
@@ -134,7 +134,7 @@ export default function HomeBanner() {
                 <img
                   className="maxab-hero-image"
                   src={banner.image}
-                  alt={banner.title || "MAXAB collection"}
+                  alt={banner.title || "MAXPRODUCT collection"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                   loading={index === 0 ? "eager" : "lazy"}
                   draggable="false"

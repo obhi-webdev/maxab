@@ -9,7 +9,7 @@ const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 const MAX_IMAGES = 12;
 
 export default function ProductImagesManager() {
-  const token = sessionStorage.getItem("maxab-admin-token");
+  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
 
   const [products, setProducts] = useState([]);
   const [selected, setSelected] = useState("");
@@ -193,25 +193,25 @@ export default function ProductImagesManager() {
 
   if (!token) {
     return (
-      <div className="maxab-images-page">
-        <div className="maxab-images-panel">
+      <div className="MAXPRODUCT-images-page">
+        <div className="MAXPRODUCT-images-panel">
           <h2>Admin Login Required</h2>
-          <a href="/admin/login">Login to MAXAB</a>
+          <a href="/admin/login">Login to MAXPRODUCT</a>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="maxab-images-page">
-      <main className="maxab-images-container">
+    <div className="MAXPRODUCT-images-page">
+      <main className="MAXPRODUCT-images-container">
 
-        <a href="/admin/dashboard" className="maxab-images-back">
+        <a href="/admin/dashboard" className="MAXPRODUCT-images-back">
           <ArrowLeft size={17}/> Back to Dashboard
         </a>
 
-        <div className="maxab-images-heading">
-          <span>MAXAB PRODUCT MANAGEMENT</span>
+        <div className="MAXPRODUCT-images-heading">
+          <span>MAXPRODUCT PRODUCT MANAGEMENT</span>
           <h1>Product Image Gallery</h1>
           <p>
             Upload multiple product images, remove photos,
@@ -219,14 +219,14 @@ export default function ProductImagesManager() {
           </p>
         </div>
 
-        {error && <div className="maxab-images-error">{error}</div>}
-        {notice && <div className="maxab-images-notice">{notice}</div>}
+        {error && <div className="MAXPRODUCT-images-error">{error}</div>}
+        {notice && <div className="MAXPRODUCT-images-notice">{notice}</div>}
 
-        <section className="maxab-images-panel">
-          <label className="maxab-images-label">Select Product</label>
+        <section className="MAXPRODUCT-images-panel">
+          <label className="MAXPRODUCT-images-label">Select Product</label>
 
           <select
-            className="maxab-images-select"
+            className="MAXPRODUCT-images-select"
             value={selected}
             disabled={busy}
             onChange={event => setSelected(event.target.value)}
@@ -242,8 +242,8 @@ export default function ProductImagesManager() {
 
         {selected && product && (
           <>
-            <section className="maxab-images-panel">
-              <div className="maxab-images-section-title">
+            <section className="MAXPRODUCT-images-panel">
+              <div className="MAXPRODUCT-images-section-title">
                 <div>
                   <h2>Current Images</h2>
                   <p>
@@ -253,18 +253,18 @@ export default function ProductImagesManager() {
                 <span>{images.length + files.length}/{MAX_IMAGES}</span>
               </div>
 
-              <div className="maxab-images-grid">
+              <div className="MAXPRODUCT-images-grid">
                 {images.map((url, index) => (
-                  <div className="maxab-image-item" key={`${url}-${index}`}>
+                  <div className="MAXPRODUCT-image-item" key={`${url}-${index}`}>
                     <img src={url} alt={`${product.name} ${index + 1}`}/>
 
                     {index === 0 && (
-                      <span className="maxab-main-image-tag">
+                      <span className="MAXPRODUCT-main-image-tag">
                         MAIN IMAGE
                       </span>
                     )}
 
-                    <div className="maxab-image-actions">
+                    <div className="MAXPRODUCT-image-actions">
                       <button
                         disabled={busy || index === 0}
                         onClick={() => moveImage(index, -1)}
@@ -290,10 +290,10 @@ export default function ProductImagesManager() {
                 ))}
 
                 {files.map(item => (
-                  <div className="maxab-image-item new" key={item.id}>
+                  <div className="MAXPRODUCT-image-item new" key={item.id}>
                     <img src={item.preview} alt={item.file.name}/>
-                    <span className="maxab-new-image-tag">NEW</span>
-                    <div className="maxab-image-actions">
+                    <span className="MAXPRODUCT-new-image-tag">NEW</span>
+                    <div className="MAXPRODUCT-image-actions">
                       <button
                         disabled={busy}
                         onClick={() => removeNew(item.id)}
@@ -306,7 +306,7 @@ export default function ProductImagesManager() {
                 ))}
               </div>
 
-              <label className="maxab-upload-zone">
+              <label className="MAXPRODUCT-upload-zone">
                 <UploadCloud size={35}/>
                 <strong>Select Multiple Images</strong>
                 <span>
@@ -322,7 +322,7 @@ export default function ProductImagesManager() {
               </label>
 
               <button
-                className="maxab-save-images"
+                className="MAXPRODUCT-save-images"
                 onClick={save}
                 disabled={busy || images.length + files.length > MAX_IMAGES}
               >
@@ -330,7 +330,7 @@ export default function ProductImagesManager() {
                 {busy ? "Uploading & Saving..." : "Save Product Gallery"}
               </button>
 
-              <p className="maxab-images-note">
+              <p className="MAXPRODUCT-images-note">
                 Removing an image from the gallery removes its URL
                 from the product, not the original ImageKit file.
               </p>

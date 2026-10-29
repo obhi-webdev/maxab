@@ -1,5 +1,10 @@
-import { trackMetaPurchase } from "../services/metaPixel";
-import { useEffect, useState } from "react";
+import {
+  trackMetaPurchase,
+  trackMetaEvent,
+  getMetaConsent,
+  setMetaConsent
+} from "../services/metaPixel";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft, ShoppingBag, CheckCircle2, LockKeyhole
 } from "lucide-react";
@@ -22,13 +27,48 @@ export default function Checkout() {
   const { cart, clearCart } = useCart();
   const [customer, setCustomer] = useState(INITIAL);
   const [sending, setSending] = useState(false);
-  const [marketingConsent, setMarketingConsent] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(getMetaConsent);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(null);
   const [catalog, setCatalog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deliveryRates, setDeliveryRates] = useState(null);
   const [ratesError, setRatesError] = useState("");
+
+  const checkoutTracked = useRef(false);
+
+  useEffect(() => {
+    if (
+      !marketingConsent ||
+      !cart.length ||
+      checkoutTracked.current
+    ) return;
+
+    checkoutTracked.current = true;
+
+    trackMetaEvent("InitiateCheckout", {
+      currency: "BDT",
+      value: cart.reduce(
+        (sum, item) =>
+          sum + Number(item.price || 0) * item.quantity,
+        0
+      ),
+      content_ids: cart.map(item =>
+        String(item.id || item._id)
+      ),
+      content_type: "product",
+      contents: cart.map(item => ({
+        id: String(item.id || item._id),
+        quantity: item.quantity,
+        item_price: Number(item.price || 0)
+      })),
+      num_items: cart.reduce(
+        (sum, item) => sum + item.quantity, 0
+      )
+    });
+  }, [marketingConsent, cart]);
+
+
 
 
   useEffect(() => {
@@ -85,13 +125,13 @@ export default function Checkout() {
 
     try {
       let requestId = sessionStorage.getItem(
-        "maxab-checkout-request-id"
+        "MAXPRODUCT-checkout-request-id"
       );
 
       if (!requestId) {
         requestId = crypto.randomUUID();
         sessionStorage.setItem(
-          "maxab-checkout-request-id",
+          "MAXPRODUCT-checkout-request-id",
           requestId
         );
       }
@@ -123,7 +163,7 @@ export default function Checkout() {
           console.warn("Browser Meta Purchase failed:", error.message);
         });
       }
-      sessionStorage.removeItem("maxab-checkout-request-id");
+      sessionStorage.removeItem("MAXPRODUCT-checkout-request-id");
       clearCart();
     } catch (err) {
       setError(err.message);
@@ -153,7 +193,7 @@ export default function Checkout() {
           Track Your Order
         </a>
         <a className="tracking-store-back" href="/">
-          Back to MAXAB
+          Back to MAXPRODUCT
         </a>
       </div>
     );
@@ -162,7 +202,7 @@ export default function Checkout() {
   return (
     <div className="store-subpage">
       <div className="store-subpage-header">
-        <a className="store-page-logo" href="/">MAXAB<span>.</span></a>
+        <a className="store-page-logo" href="/">MAXPRODUCT<span>.</span></a>
         <a href="/#shop"><ArrowLeft size={18}/> Continue Shopping</a>
       </div>
 
@@ -303,9 +343,11 @@ export default function Checkout() {
                 <input
                   type="checkbox"
                   checked={marketingConsent}
-                  onChange={event =>
-                    setMarketingConsent(event.target.checked)
-                  }
+                  onChange={event => {
+                    const allowed = event.target.checked;
+                    setMarketingConsent(allowed);
+                    setMetaConsent(allowed);
+                  }}
                 />
                 <span>
                   I agree to optional Meta marketing conversion tracking

@@ -1,3 +1,5 @@
+import "./services/metaPixel.js";
+import "./utils/siteFavicon.js";
 import "./styles/darkGreenTheme.css";
 import ProductPageLayout from "./pages/ProductPageLayout";
 import LogoSettings from "./admin/LogoSettings";

@@ -1299,3 +1299,45 @@ body #root .site-header .header-search button svg {
 }
 
 /* MAXAB DARK GREEN HEADER END */
+
+
+/* MAXPRODUCT PREMIUM TEXT LOGO START */
+
+/* Compact premium logo typography */
+.site-header .site-logo {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-size: 27px !important;
+  font-weight: 800;
+  letter-spacing: -1.2px !important;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* Brand accent dot */
+.site-header .site-logo > span {
+  color: #26b56b !important;
+}
+
+/* Smaller premium tagline */
+.site-header .site-logo small {
+  font-size: 8px !important;
+  font-weight: 600;
+  letter-spacing: 2.2px !important;
+  margin-top: 6px;
+  color: #a9c5b5 !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .site-header .site-logo {
+    font-size: 21px !important;
+    letter-spacing: -0.8px !important;
+  }
+
+  .site-header .site-logo small {
+    font-size: 7px !important;
+    letter-spacing: 1.3px !important;
+  }
+}
+
+/* MAXPRODUCT PREMIUM TEXT LOGO END */

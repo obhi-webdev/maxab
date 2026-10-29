@@ -258,3 +258,227 @@
   margin-bottom: 20px;
   line-height: 1.6;
 }
+
+
+/* MAXPRODUCT MINIMAL PIXEL UI START */
+
+.maxab-meta-page {
+  background: #f8fafc;
+  color: #1e293b;
+  padding: 32px 20px 75px;
+}
+
+.maxab-meta-container {
+  max-width: 1140px;
+}
+
+.maxab-meta-back {
+  color: #14532d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.maxab-meta-heading {
+  margin: 28px 0;
+}
+
+.maxab-meta-heading > span {
+  color: #15803d;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+}
+
+.maxab-meta-heading h1 {
+  color: #0f172a;
+  font-size: clamp(26px, 3vw, 34px);
+  letter-spacing: -0.8px;
+  font-weight: 750;
+}
+
+.maxab-meta-heading p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.maxab-meta-layout {
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+  gap: 20px;
+}
+
+.maxab-meta-card {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.025);
+}
+
+.maxab-meta-card h2 {
+  color: #0f172a;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.maxab-meta-card > label:not(.maxab-meta-switch) {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.maxab-meta-card input[type="text"],
+.maxab-meta-card input[type="password"] {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  padding: 13px 14px;
+  box-sizing: border-box;
+}
+
+.maxab-meta-card input:focus-visible {
+  outline: 2px solid #15803d;
+  outline-offset: 2px;
+}
+
+.maxab-meta-card small {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.maxab-meta-token {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.maxab-meta-token input {
+  border: 0 !important;
+}
+
+.maxab-meta-token button {
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+}
+
+.maxab-meta-switch {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 18px;
+  margin: 22px 0;
+}
+
+.maxab-meta-switch input {
+  accent-color: #14532d;
+  flex-shrink: 0;
+}
+
+.maxab-meta-switch strong {
+  color: #1e293b;
+  font-size: 13px;
+}
+
+.maxab-meta-switch span {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.maxab-meta-test-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.maxab-meta-test-section h3 {
+  color: #0f172a;
+  font-size: 16px;
+}
+
+.maxab-meta-save {
+  background: #14532d;
+  color: #ffffff;
+  border-radius: 9px;
+  padding: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.maxab-meta-save:hover:not(:disabled) {
+  background: #166534;
+}
+
+.maxab-meta-save:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.maxab-meta-status > svg {
+  color: #14532d;
+}
+
+.maxab-meta-status > div:not(.maxab-meta-security) {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.maxab-meta-status > div > span {
+  color: #64748b;
+}
+
+.maxab-meta-status strong {
+  color: #334155;
+  text-align: right;
+}
+
+.maxab-meta-security {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #dcfce7;
+}
+
+.maxab-meta-footnote {
+  color: #64748b;
+}
+
+.maxab-meta-notice {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.maxab-meta-error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+@media (max-width: 800px) {
+  .maxab-meta-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .maxab-meta-page {
+    padding: 20px 12px 50px;
+  }
+
+  .maxab-meta-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .maxab-meta-card {
+    padding: 16px;
+  }
+
+  .maxab-meta-switch {
+    padding: 13px;
+  }
+}
+
+/* MAXPRODUCT MINIMAL PIXEL UI END */
+

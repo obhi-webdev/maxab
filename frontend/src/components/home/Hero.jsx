@@ -13,7 +13,7 @@ export default function Hero() {
           transition={{ duration: 0.65 }}
         >
           <div className="eyebrow">
-            <span className="dot" /> WELCOME TO MAXAB
+            <span className="dot" /> WELCOME TO MAXPRODUCT
           </div>
 
           <h1>
@@ -52,7 +52,7 @@ export default function Hero() {
           <div className="hero-photo-inner">
             <ProductImage
               src="/images/dictionary-locker.jpg"
-              alt="MAXAB Smart Dictionary Locker"
+              alt="MAXPRODUCT Smart Dictionary Locker"
             />
           </div>
           <div className="hero-photo-label">

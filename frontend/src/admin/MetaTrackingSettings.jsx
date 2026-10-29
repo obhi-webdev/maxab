@@ -9,7 +9,7 @@ import "./metaTrackingSettings.css";
 const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 export default function MetaTrackingSettings() {
-  const token = sessionStorage.getItem("maxab-admin-token");
+  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
 
   const [pixelId, setPixelId] = useState("");
   const [accessToken, setAccessToken] = useState("");
@@ -107,7 +107,7 @@ export default function MetaTrackingSettings() {
       <main className="maxab-meta-page">
         <div className="maxab-meta-card">
           <h2>Admin Login Required</h2>
-          <a href="/admin/login">Login to MAXAB</a>
+          <a href="/admin/login">Login to MAXPRODUCT</a>
         </div>
       </main>
     );
@@ -122,7 +122,7 @@ export default function MetaTrackingSettings() {
         </a>
 
         <div className="maxab-meta-heading">
-          <span>MAXAB MARKETING INTEGRATIONS</span>
+          <span>MAXPRODUCT MARKETING INTEGRATIONS</span>
           <h1>Meta Pixel & Conversions API</h1>
           <p>
             Configure your Meta Dataset and secure
@@ -260,7 +260,7 @@ export default function MetaTrackingSettings() {
             </button>
           </form>
 
-          <aside className="maxab-meta-card maxab-meta-status">
+          <aside className="maxab-meta-card MAXPRODUCT-meta-status">
             <Activity size={28}/>
 
             <h2>Integration Status</h2>

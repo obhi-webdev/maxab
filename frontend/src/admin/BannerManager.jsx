@@ -16,7 +16,7 @@ const blank = {
 };
 
 export default function BannerManager() {
-  const token = sessionStorage.getItem("maxab-admin-token");
+  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
   const [banners, setBanners] = useState([]);
   const [form, setForm] = useState(blank);
   const [editing, setEditing] = useState(null);
@@ -175,7 +175,7 @@ export default function BannerManager() {
 
         <div className="banner-admin-heading">
           <div>
-            <span>MAXAB STORE MANAGEMENT</span>
+            <span>MAXPRODUCT STORE MANAGEMENT</span>
             <h1>Homepage Banners</h1>
             <p>Upload and manage promotional banners.</p>
           </div>

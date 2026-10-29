@@ -6,6 +6,7 @@ import {
   ArrowLeft, ShieldCheck
 } from "lucide-react";
 import "./admin.css";
+import "./adminMinimal.css";
 
 const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
@@ -74,14 +75,14 @@ function AdminLogin({ onLogin }) {
   return (
     <div className="admin-login-page">
       <form className="admin-login-card" onSubmit={handleSubmit}>
-        <a className="admin-brand" href="/">MAXAB<span>.</span></a>
+        <a className="admin-brand" href="/">MAXPRODUCT<span>.</span></a>
 
         <div className="admin-login-icon">
           <ShieldCheck size={29}/>
         </div>
 
         <h1>Admin Login</h1>
-        <p>Sign in to manage your MAXAB store.</p>
+        <p>Sign in to manage your MAXPRODUCT store.</p>
 
         {error && <div className="admin-error">{error}</div>}
 
@@ -494,7 +495,7 @@ function Dashboard({ token, onLogout }) {
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <a href="/admin/dashboard" className="admin-sidebar-logo">
-          MAXAB<span>.</span>
+          MAXPRODUCT<span>.</span>
           <small>ADMIN PANEL</small>
         </a>
 
@@ -543,7 +544,7 @@ function Dashboard({ token, onLogout }) {
           <div>
             <span>STORE MANAGEMENT</span>
             <h1>Admin Dashboard</h1>
-            <p>Manage your MAXAB product catalog.</p>
+            <p>Manage your MAXPRODUCT product catalog.</p>
           </div>
           <button
             className="admin-primary"
@@ -688,7 +689,7 @@ function OrdersPanel({ token }) {
     loadOrders();
   }, [token]);
 
-  // MAXAB_ADMIN_DELETE_ORDER
+  // MAXPRODUCT_ADMIN_DELETE_ORDER
   async function deleteOrder(order) {
     const confirmation = window.prompt(
       `Permanently delete order ${order.orderNumber}?\\n` +
@@ -887,7 +888,7 @@ function OrdersPanel({ token }) {
                   <td>
                     <button
                       type="button"
-                      className="maxab-view-order"
+                      className="MAXPRODUCT-view-order"
                       onClick={() => setSelectedOrder(order)}
                     >
                       View Details
@@ -1002,17 +1003,17 @@ function OrdersPanel({ token }) {
 
 export default function AdminApp() {
   const [token, setToken] = useState(
-    () => sessionStorage.getItem("maxab-admin-token") || ""
+    () => sessionStorage.getItem("MAXPRODUCT-admin-token") || ""
   );
 
   function login(value) {
-    sessionStorage.setItem("maxab-admin-token", value);
+    sessionStorage.setItem("MAXPRODUCT-admin-token", value);
     setToken(value);
     window.history.replaceState({}, "", "/admin/dashboard");
   }
 
   function logout() {
-    sessionStorage.removeItem("maxab-admin-token");
+    sessionStorage.removeItem("MAXPRODUCT-admin-token");
     setToken("");
     window.history.replaceState({}, "", "/admin/login");
   }

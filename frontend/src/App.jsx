@@ -1,3 +1,4 @@
+import { trackMetaEvent, metaProductData } from "./services/metaPixel";
 import PromoOffer from "./components/home/PromoOffer";
 import SEO from "./components/seo/SEO";
 import HomeBanner from "./components/home/HomeBanner";
@@ -19,6 +20,22 @@ import "./styles/global.css";
 function Storefront() {
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const term = search.trim();
+
+    if (term.length < 2) return;
+
+    const timer = window.setTimeout(() => {
+      trackMetaEvent("Search", {
+        search_string: term
+      });
+    }, 800);
+
+    return () => window.clearTimeout(timer);
+  }, [search]);
+
+
 
   const [liveProducts, setLiveProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -64,7 +81,7 @@ function Storefront() {
   const [wishlist, setWishlist] = useState(() => {
     try {
       const saved = JSON.parse(
-        localStorage.getItem("maxab-wishlist") || "[]"
+        localStorage.getItem("MAXPRODUCT-wishlist") || "[]"
       );
       return Array.isArray(saved) ? saved : [];
     } catch {
@@ -75,7 +92,7 @@ function Storefront() {
   const [wishlistOnly, setWishlistOnly] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("maxab-wishlist", JSON.stringify(wishlist));
+    localStorage.setItem("MAXPRODUCT-wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
   useEffect(() => {
@@ -84,13 +101,26 @@ function Storefront() {
       setWishlistOnly(false);
     };
 
-    window.addEventListener("maxab-category", selectCategory);
+    window.addEventListener("MAXPRODUCT-category", selectCategory);
 
     return () =>
-      window.removeEventListener("maxab-category", selectCategory);
+      window.removeEventListener("MAXPRODUCT-category", selectCategory);
   }, []);
 
   function toggleWishlist(id) {
+    if (!wishlist.includes(id)) {
+      const product = liveProducts.find(
+        item => String(item.id || item._id) === String(id)
+      );
+
+      if (product) {
+        trackMetaEvent(
+          "AddToWishlist",
+          metaProductData(product)
+        );
+      }
+    }
+
     setWishlist(current =>
       current.includes(id)
         ? current.filter(item => item !== id)
@@ -117,8 +147,8 @@ function Storefront() {
   return (
     <>
       <SEO
-        title="MAXAB | Smart Gadgets, Fashion & Lifestyle"
-        description="Explore smart gadgets, fashion, personal care and everyday essentials at MAXAB."
+        title="MAXPRODUCT | Smart Gadgets, Fashion & Lifestyle"
+        description="Explore smart gadgets, fashion, personal care and everyday essentials at MAXPRODUCT."
       />
       <CustomCursor/>
 
@@ -207,11 +237,11 @@ function Storefront() {
         <section id="about" className="about-mini">
           <div className="container-wide">
             <span className="heading-eyebrow">ABOUT OUR STORE</span>
-            <h2>Welcome to MAXAB</h2>
+            <h2>Welcome to MAXPRODUCT</h2>
             <p>
               Discover smart gadgets, fashion and lifestyle
               essentials from one convenient online store.
-              MAXAB is designed to make product discovery
+              MAXPRODUCT is designed to make product discovery
               and shopping simple.
             </p>
           </div>

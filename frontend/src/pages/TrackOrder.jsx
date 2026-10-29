@@ -63,7 +63,7 @@ export default function TrackOrder() {
     <div className="store-subpage">
       <header className="store-subpage-header">
         <a href="/" className="store-page-logo">
-          MAXAB<span>.</span>
+          MAXPRODUCT<span>.</span>
         </a>
         <a href="/">Back to Store</a>
       </header>

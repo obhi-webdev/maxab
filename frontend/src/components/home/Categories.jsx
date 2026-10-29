@@ -25,7 +25,7 @@ export default function Categories({ onSelect }) {
       <div className="container">
         <div className="section-heading">
           <div>
-            <span className="section-tag">EXPLORE MAXAB</span>
+            <span className="section-tag">EXPLORE MAXPRODUCT</span>
             <h2>Shop by Category</h2>
           </div>
           <p>Find products that match your everyday needs.</p>

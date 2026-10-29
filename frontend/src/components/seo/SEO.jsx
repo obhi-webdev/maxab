@@ -15,8 +15,8 @@ function setMeta(key, value, attribute = "name") {
 }
 
 export default function SEO({
-  title = "MAXAB | Smart Gadgets, Fashion & Lifestyle",
-  description = "Shop smart gadgets, fashion and lifestyle essentials at MAXAB.",
+  title = "MAXPRODUCT | Smart Gadgets, Fashion & Lifestyle",
+  description = "Shop smart gadgets, fashion and lifestyle essentials at MAXPRODUCT.",
   image = "",
   noindex = false
 }) {

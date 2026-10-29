@@ -19,11 +19,11 @@ export default function Header({
   wishlistCount = 0,
   onWishlistClick
 }) {
-  const [maxabScrolled, setMaxabScrolled] = useState(false);
+  const [MAXPRODUCTScrolled, setMAXPRODUCTScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      setMaxabScrolled(window.scrollY > 100);
+      setMAXPRODUCTScrolled(window.scrollY > 100);
     };
 
     onScroll();
@@ -83,21 +83,21 @@ export default function Header({
     <>
       
 
-      <header className={`site-header ${maxabScrolled ? "maxab-header-scrolled" : ""}`}>
+      <header className={`site-header ${MAXPRODUCTScrolled ? "maxab-header-scrolled" : ""}`}>
         <div className="container header-main">
 
           <a href="/#home" className="site-logo maxab-dynamic-logo">
             {websiteLogo ? (
               <img
                 src={websiteLogo}
-                alt="MAXAB"
+                alt="MAXPRODUCT"
                 className="maxab-header-logo-image"
                 loading="eager"
                 onError={() => setWebsiteLogo("")}
               />
             ) : (
               <>
-                MAXAB<span>.</span>
+                MAXPRODUCT
                 <small>EVERYDAY ESSENTIALS</small>
               </>
             )}
@@ -191,7 +191,7 @@ export default function Header({
                       onClick={() => {
                         setCategoryOpen(false);
                         window.dispatchEvent(
-                          new CustomEvent("maxab-category", {
+                          new CustomEvent("MAXPRODUCT-category", {
                             detail: key
                           })
                         );

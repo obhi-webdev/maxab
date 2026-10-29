@@ -111,7 +111,7 @@ export default function CategoryBanners({ onSelect }) {
             EXPLORE OUR COLLECTIONS
           </span>
           <h2>Shop by Category</h2>
-          <p>Find what you love at MAXAB.</p>
+          <p>Find what you love at MAXPRODUCT.</p>
         </div>
 
         <a href="#shop" className="maxab-loop-view-all">
