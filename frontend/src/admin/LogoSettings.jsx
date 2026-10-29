@@ -16,10 +16,50 @@ export default function LogoSettings() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+
+  async function deleteLogo() {
+    if (!logoUrl || saving || loading) return;
+
+    if (!window.confirm(
+      "Delete the current website logo? The default MAXAB logo will appear."
+    )) return;
+
+    setSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const response = await fetch(`${API}/site-branding`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ logoUrl: "" })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to delete logo");
+      }
+
+      setLogoUrl("");
+      setFile(null);
+      setPreview("");
+      setMessage("Website logo deleted successfully.");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   const token = sessionStorage.getItem("maxab-admin-token");
 
   useEffect(() => {
-    if (!token) {
+  
+  if (!token) {
       setLoading(false);
       return;
     }
@@ -180,6 +220,19 @@ export default function LogoSettings() {
           </div>
 
           {loading && <p>Loading current logo...</p>}
+
+          {Boolean(logoUrl) && (
+            <button
+              type="button"
+              className="maxab-logo-delete"
+              onClick={deleteLogo}
+              disabled={saving || loading}
+            >
+              Delete Logo
+            </button>
+          )}
+
+
 
           <label className="maxab-logo-file">
             <Upload size={19}/>

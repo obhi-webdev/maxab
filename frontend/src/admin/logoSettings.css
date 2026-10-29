@@ -143,3 +143,29 @@
   color: #258348;
   font-size: 13px;
 }
+
+/* MAXAB WEBSITE LOGO DELETE BUTTON */
+.maxab-logo-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  padding: 12px 22px;
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.maxab-logo-delete:hover:not(:disabled) {
+  background: #ffe4e6;
+}
+
+.maxab-logo-delete:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
