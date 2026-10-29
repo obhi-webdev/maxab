@@ -991,133 +991,65 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 
 
 
-/* MAXAB SMART STICKY HEADER START */
 
-/* Keep header logo/search/cart above all page sections */
+/* MAXPRODUCT CLEAN STICKY HEADER START */
+
 .site-header {
   position: sticky !important;
   top: 0 !important;
-  z-index: 1000 !important;
-  background: #ffffff !important;
+  z-index: 9999 !important;
   isolation: isolate;
 }
 
-/* Keep main header visually stable */
 .site-header .header-main {
   position: relative;
-  z-index: 3;
-  background: #ffffff;
+  z-index: 10;
 }
 
-/* Navigation disappears smoothly on scrolling */
-.site-header .navigation-wrapper {
-  max-height: 90px;
-  opacity: 1;
-  visibility: visible;
-  overflow: visible;
-  transition:
-    max-height .32s ease,
-    opacity .25s ease,
-    visibility .25s ease;
-}
-
-/* Hide navigation when page is scrolled */
-.site-header.maxab-header-scrolled .navigation-wrapper {
-  max-height: 0 !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  overflow: hidden !important;
-  pointer-events: none;
-}
-
-/* Subtle premium shadow when sticky */
-.site-header.maxab-header-scrolled {
-  box-shadow: 0 5px 22px rgba(0,0,0,.07);
-}
-
-/* MAXAB SMART STICKY HEADER END */
-
-
-/* MAXAB SCROLL NAV FIX START */
-
-.site-header {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 9999 !important;
-  background: #fff !important;
-}
-
-.site-header .header-main {
-  position: relative;
-  z-index: 5;
-  background: #fff;
-}
-
-.site-header .navigation-wrapper {
-  display: block;
-  max-height: 100px;
-  opacity: 1;
-  overflow: visible;
-  transition:
-    max-height .3s ease,
-    opacity .25s ease;
-}
-
-.site-header.maxab-header-scrolled .navigation-wrapper {
-  max-height: 0 !important;
-  opacity: 0 !important;
-  overflow: hidden !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  border: 0 !important;
-}
-
-.site-header.maxab-header-scrolled {
-  box-shadow: 0 5px 20px rgba(0,0,0,.07);
-}
-
-/* MAXAB SCROLL NAV FIX END */
-
-
-/* MAXAB STABLE STICKY HEADER START */
-
-.site-header {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 9999 !important;
-  background: #fff !important;
-}
-
-.site-header .header-main {
-  position: relative !important;
-  z-index: 10 !important;
-  background: #fff !important;
-}
-
+/* Navigation visible before scrolling */
 .site-header .navigation-wrapper {
   display: block !important;
-  max-height: none !important;
   height: auto !important;
+  max-height: 90px !important;
   opacity: 1 !important;
   visibility: visible !important;
-  overflow: visible !important;
-  transform: translateY(0);
-  transition: transform .3s ease, opacity .3s ease;
-  will-change: transform;
+  overflow: visible;
+  transform: none !important;
+  will-change: auto !important;
+  transition:
+    max-height 0.28s ease,
+    opacity 0.22s ease !important;
 }
 
+/* Collapse navigation without leaving an empty gap */
 .site-header.maxab-header-scrolled .navigation-wrapper {
-  transform: translateY(-110%) !important;
+  max-height: 0 !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  overflow: hidden !important;
+  transform: none !important;
   pointer-events: none !important;
+  border-top-color: transparent !important;
 }
 
 .site-header.maxab-header-scrolled {
-  box-shadow: 0 4px 20px rgba(0,0,0,.07);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
 }
 
-/* MAXAB STABLE STICKY HEADER END */
+@media (prefers-reduced-motion: reduce) {
+  .site-header .navigation-wrapper {
+    transition: none !important;
+  }
+}
+
+/* MAXPRODUCT CLEAN STICKY HEADER END */
+
+
+
+
+
+
+
 
 
 /* MAXAB PREMIUM HOVER EFFECTS START */
@@ -1341,3 +1273,617 @@ body #root .site-header .header-search button svg {
 }
 
 /* MAXPRODUCT PREMIUM TEXT LOGO END */
+
+
+/* MAXPRODUCT SMOOTH SCROLL NAV START */
+
+/* The main header stays sticky */
+.site-header {
+  position: sticky !important;
+  top: 0 !important;
+}
+
+/* Navigation shrinks with actual scroll distance */
+.site-header .navigation-wrapper {
+  --progress: var(--maxproduct-nav-progress, 0);
+  height: calc(72px * (1 - var(--progress))) !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  opacity: calc(1 - var(--progress)) !important;
+  visibility: visible !important;
+  transform: none !important;
+  transition: none !important;
+  pointer-events: auto;
+}
+
+/* Slide navigation content gently upward */
+.site-header .navigation-inner {
+  transform: translateY(
+    calc(-22px * var(--maxproduct-nav-progress, 0))
+  );
+  opacity: calc(1 - var(--maxproduct-nav-progress, 0));
+  transition: none !important;
+}
+
+/* Override old scrolled collapse styles */
+.site-header.maxab-header-scrolled .navigation-wrapper {
+  height: 0 !important;
+  max-height: 0 !important;
+  transform: none !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Keep dark green theme intact */
+.site-header .header-main {
+  position: relative;
+  z-index: 10;
+}
+
+/* MAXPRODUCT SMOOTH SCROLL NAV END */
+
+
+/* MAXPRODUCT RESPONSIVE V1 START */
+
+/* Safe sizing and media behavior */
+html {
+  max-width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+#root {
+  min-width: 0;
+  max-width: 100%;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .site-header .header-main {
+    gap: 18px;
+  }
+
+  .site-header .header-search {
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .site-header .header-tools {
+    gap: 14px;
+  }
+
+  .site-header .navigation-inner {
+    gap: 20px;
+  }
+
+  .maxab-pdp-container {
+    width: min(100% - 32px, 900px);
+  }
+
+  .maxab-pdp-product {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 767px) {
+
+  /* Header: logo/tools first row, search second row */
+  .site-header .header-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 12px;
+    min-height: 0;
+    height: auto;
+    padding: 12px 14px;
+  }
+
+  .site-header .site-logo,
+  .site-header .maxab-dynamic-logo {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 48%;
+  }
+
+  .site-header .site-logo {
+    font-size: clamp(20px, 5.5vw, 27px);
+    letter-spacing: -1px;
+  }
+
+  .site-header .site-logo img,
+  .site-header .maxab-dynamic-logo img {
+    max-width: 100%;
+    max-height: 45px;
+    object-fit: contain;
+  }
+
+  .site-header .header-tools {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 8px;
+    margin-left: auto;
+    align-items: center;
+  }
+
+  .site-header .header-tool {
+    min-width: 34px;
+    gap: 2px;
+  }
+
+  .site-header .header-tool > span:last-child {
+    font-size: 9px;
+  }
+
+  .site-header .header-search {
+    order: 10;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    height: 46px;
+    margin: 0;
+    padding: 4px;
+    border-radius: 9px;
+  }
+
+  .site-header .header-search input {
+    min-width: 0;
+    padding: 0 10px;
+    font-size: 16px;
+  }
+
+  .site-header .header-search button {
+    width: 42px;
+    height: 38px;
+    flex-shrink: 0;
+  }
+
+  .site-header .mobile-menu-toggle {
+    flex-shrink: 0;
+  }
+
+  /* Category navigation: prevent horizontal layout overflow */
+  .site-header .navigation-inner {
+    max-width: 100%;
+    min-width: 0;
+    gap: 12px;
+    padding-inline: 14px;
+  }
+
+  .site-header .main-nav {
+    min-width: 0;
+  }
+
+  .site-header .main-nav a {
+    font-size: 12px;
+  }
+
+  .site-header .category-menu-button {
+    min-width: 140px;
+    height: 40px;
+    padding: 0 10px;
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  /* General mobile page spacing */
+  main {
+    min-width: 0;
+  }
+
+  .container {
+    max-width: 100%;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* Product details layout */
+  .maxab-pdp-container {
+    width: 100% !important;
+    padding-top: 14px;
+    padding-bottom: 48px;
+  }
+
+  .maxab-pdp-breadcrumb {
+    padding-inline: 14px;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+
+  .maxab-pdp-product {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 22px;
+    padding: 14px !important;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .maxab-pdp-gallery,
+  .maxab-pdp-information {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .maxab-pdp-main-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    max-height: none;
+    border-radius: 14px;
+  }
+
+  .maxab-pdp-main-image > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px;
+  }
+
+  .maxab-pdp-thumbnails {
+    display: flex;
+    gap: 9px;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .maxab-pdp-thumbnails button {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+  }
+
+  .maxab-pdp-information h1 {
+    font-size: clamp(23px, 6vw, 29px);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .maxab-pdp-pricing {
+    gap: 10px;
+  }
+
+  .maxab-pdp-pricing > strong {
+    font-size: clamp(29px, 8vw, 37px);
+  }
+
+  .maxab-pdp-quantity {
+    max-width: 100%;
+  }
+
+  .maxab-pdp-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .maxab-pdp-actions button {
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+    padding: 10px 6px;
+    font-size: 12px;
+    white-space: normal;
+  }
+
+  .maxab-pdp-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .maxab-pdp-benefits > div {
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 7px;
+    padding: 12px 5px;
+    font-size: 10px;
+  }
+
+  .maxab-pdp-description-panel {
+    margin: 15px 14px 0;
+    border-radius: 12px;
+  }
+
+  .maxab-pdp-description-content {
+    padding: 18px 15px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .maxab-pdp-rich-description {
+    overflow-wrap: anywhere;
+  }
+
+  .maxab-pdp-rich-description img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .maxab-pdp-rich-description pre,
+  .maxab-pdp-rich-description table {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Product and checkout forms: touch-friendly */
+  .maxab-pdp-page input,
+  .maxab-pdp-page select,
+  .maxab-pdp-page textarea {
+    font-size: 16px;
+  }
+
+  /* Common storefront product grids */
+  .product-grid,
+  .products-grid,
+  .product-list-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product-card,
+  .product-item {
+    min-width: 0;
+  }
+
+  .product-card img,
+  .product-item img {
+    max-width: 100%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 390px) {
+  .site-header .header-main {
+    padding-inline: 10px;
+    gap: 8px;
+  }
+
+  .site-header .header-tools {
+    gap: 4px;
+  }
+
+  .site-header .header-tool {
+    min-width: 30px;
+  }
+
+  .maxab-pdp-actions {
+    gap: 7px;
+  }
+
+  .maxab-pdp-actions button {
+    font-size: 11px;
+  }
+
+  .maxab-pdp-benefits > div {
+    font-size: 9px;
+    padding-inline: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maxab-pdp-page *,
+  .maxab-pdp-page *::before,
+  .maxab-pdp-page *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* MAXPRODUCT RESPONSIVE V1 END */
+
+
+/* MAXPRODUCT PREMIUM MOBILE MENU V2 */
+
+.mp-mobile-overlay {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .site-header .navigation-wrapper {
+    display: none !important;
+  }
+
+  .site-header .mobile-menu-toggle {
+    display: grid !important;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 11px;
+    background: rgba(255,255,255,.09);
+    cursor: pointer;
+  }
+
+  .mp-mobile-overlay {
+    display: block !important;
+    position: fixed !important;
+    inset: 0;
+    z-index: 2147483000 !important;
+  }
+
+  .mp-mobile-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: rgba(2,20,12,.65);
+    backdrop-filter: blur(4px);
+  }
+
+  .mp-mobile-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(365px, 88vw);
+    height: 100vh;
+    height: 100dvh;
+    background: #fff;
+    color: #173b27;
+    box-shadow: -12px 0 50px rgba(0,0,0,.2);
+    animation: mp-slide-in .3s ease both;
+  }
+
+  .mp-mobile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 27px 21px 20px;
+    border-bottom: 1px solid #e8eeea;
+  }
+
+  .mp-mobile-top strong {
+    display: block;
+    color: #06452b;
+    font-size: 23px;
+    font-weight: 850;
+    letter-spacing: -1px;
+  }
+
+  .mp-mobile-top p {
+    margin: 5px 0 0;
+    color: #849488;
+    font-size: 11px;
+  }
+
+  .mp-mobile-close {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #e4ebe6;
+    border-radius: 11px;
+    background: #f5f8f6;
+    color: #06452b;
+  }
+
+  .mp-mobile-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 24px 19px;
+    overscroll-behavior: contain;
+  }
+
+  .mp-mobile-heading {
+    color: #87988b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    margin: 0 0 13px;
+    padding-left: 6px;
+  }
+
+  .mp-mobile-links {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 30px;
+  }
+
+  .mp-mobile-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 53px;
+    padding: 13px 15px;
+    border: 1px solid #e9efea;
+    border-radius: 12px;
+    background: #f7faf8;
+    color: #173b27 !important;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .mp-mobile-links a svg {
+    color: #168450;
+  }
+
+  .mp-mobile-categories {
+    display: grid;
+  }
+
+  .mp-mobile-categories a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    border-bottom: 1px solid #edf1ee;
+    color: #425d4b !important;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 11px 7px;
+  }
+
+  .mp-mobile-categories svg {
+    color: #8fa497;
+  }
+
+  .mp-mobile-footer {
+    padding: 17px 19px 22px;
+    border-top: 1px solid #e7eee9;
+  }
+
+  .mp-mobile-footer a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    border-radius: 12px;
+    background: #06452b;
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  @keyframes mp-slide-in {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mp-mobile-panel {
+      animation: none;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .mp-mobile-overlay {
+    display: none !important;
+  }
+}
+

@@ -266,7 +266,7 @@ function initializeStorefrontTracking() {
     trackMetaEvent("PageView");
   }
 
-  showConsentChoice();
+  // Consent popup disabled by website administrator.
 }
 
 if (typeof window !== "undefined") {

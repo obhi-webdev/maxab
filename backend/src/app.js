@@ -1,3 +1,4 @@
+import sitemapRoutes from "./routes/sitemapRoutes.js";
 import siteBrandingRoutes from "./routes/siteBrandingRoutes.js";
 import metaSettingsRoutes from "./routes/metaSettingsRoutes.js";
 import productImagesRoutes from "./routes/productImagesRoutes.js";
@@ -59,6 +60,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/sitemap.xml", sitemapRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.use("/api/settings", settingsRoutes);

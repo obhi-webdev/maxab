@@ -24,7 +24,7 @@ export default function ProductCard({
       viewport={{ once: true }}
       transition={{ duration: 0.35 }}
     
-      data-MAXPRODUCT-clickable="true"
+      data-maxproduct-clickable="true"
       role="link"
       tabIndex={0}
       onClick={(event) => {

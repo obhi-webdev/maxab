@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Search, Heart, ShoppingCart, Menu,
-  X, ChevronDown, Phone, ArrowRight
-} from "lucide-react";
+import { Search, Heart, ShoppingCart, Menu, X, ChevronDown, Phone, ArrowRight, ChevronRight } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 
 const menuItems = [
@@ -22,17 +19,46 @@ export default function Header({
   const [MAXPRODUCTScrolled, setMAXPRODUCTScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      setMAXPRODUCTScrolled(window.scrollY > 100);
+    const header = document.querySelector(".site-header");
+    if (!header) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+
+      const distance = Math.max(0, window.scrollY);
+      const progress = Math.min(1, distance / 160);
+
+      header.style.setProperty(
+        "--maxproduct-nav-progress",
+        String(progress)
+      );
+
+      setMAXPRODUCTScrolled(previous =>
+        previous === (progress >= 1)
+          ? previous
+          : progress >= 1
+      );
     };
 
-    onScroll();
+    const onScroll = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(update);
+      }
+    };
+
+    update();
 
     window.addEventListener("scroll", onScroll, {
       passive: true
     });
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+      header.style.removeProperty("--maxproduct-nav-progress");
+    };
   }, []);
 
 
@@ -205,7 +231,7 @@ export default function Header({
               )}
             </div>
 
-            <nav className={`main-nav ${mobileOpen ? "nav-open" : ""}`}>
+            <nav className="main-nav">
               {menuItems.map(([label, href]) => (
                 <a
                   key={label}
@@ -224,6 +250,94 @@ export default function Header({
           </div>
         </div>
       </header>
+
+      {/* MAXPRODUCT PREMIUM MOBILE DRAWER */}
+      {mobileOpen && (
+        <div className="mp-mobile-overlay">
+          <button
+            type="button"
+            className="mp-mobile-backdrop"
+            aria-label="Close menu"
+            onClick={() => setMobileOpen(false)}
+          />
+
+          <aside
+            className="mp-mobile-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile menu"
+          >
+            <div className="mp-mobile-top">
+              <div>
+                <strong>MAXPRODUCT</strong>
+                <p>Explore our collection</p>
+              </div>
+
+              <button
+                type="button"
+                className="mp-mobile-close"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+              >
+                <X size={22}/>
+              </button>
+            </div>
+
+            <div className="mp-mobile-content">
+              <div className="mp-mobile-heading">NAVIGATION</div>
+
+              <nav className="mp-mobile-links">
+                {menuItems.map(([label, href]) => (
+                  <a
+                    key={label}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <span>{label}</span>
+                    <ArrowRight size={17}/>
+                  </a>
+                ))}
+              </nav>
+
+              <div className="mp-mobile-heading">
+                SHOP BY CATEGORY
+              </div>
+
+              <div className="mp-mobile-categories">
+                {categories.map(([name, key]) => (
+                  <a
+                    key={key}
+                    href="/#shop"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      setCategoryOpen(false);
+                      window.dispatchEvent(
+                        new CustomEvent("MAXPRODUCT-category", {
+                          detail: key
+                        })
+                      );
+                    }}
+                  >
+                    <span>{name}</span>
+                    <ChevronRight size={17}/>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="mp-mobile-footer">
+              <a
+                href="/#shop"
+                onClick={() => setMobileOpen(false)}
+              >
+                Explore Products
+                <ArrowRight size={18}/>
+              </a>
+            </div>
+          </aside>
+        </div>
+      )}
+
     </>
   );
 }

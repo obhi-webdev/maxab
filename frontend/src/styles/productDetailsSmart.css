@@ -1,0 +1,456 @@
+
+/* MAXPRODUCT SMART PRODUCT PAGE V3 */
+
+/* Scope everything to single-product page */
+.maxab-pdp-page {
+  --pdp-primary: #06452b;
+  --pdp-accent: #168450;
+  --pdp-border: #e4ebe6;
+  --pdp-muted: #64786b;
+  background: #fafbf9;
+  color: #183326;
+}
+
+.maxab-pdp-container {
+  width: min(1300px, 92%);
+  padding-top: 30px;
+  padding-bottom: 86px;
+}
+
+.maxab-pdp-breadcrumb {
+  margin-bottom: 23px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.maxab-pdp-breadcrumb a:hover {
+  color: var(--pdp-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Main product area */
+.maxab-pdp-product {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+  gap: clamp(30px, 4.2vw, 60px);
+  align-items: start;
+  padding: clamp(22px, 3vw, 43px);
+  background: #fff;
+  border: 1px solid var(--pdp-border);
+  border-radius: 22px;
+  box-shadow: 0 16px 54px rgba(10, 48, 27, .045);
+}
+
+/* Product image */
+.maxab-pdp-gallery {
+  min-width: 0;
+}
+
+.maxab-pdp-main-image {
+  aspect-ratio: 1 / 1;
+  background:
+    radial-gradient(circle at 50% 35%, #fff 0%, #f5f8f5 90%);
+  border: 1px solid #edf1ed;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.maxab-pdp-main-image > img {
+  padding: clamp(12px, 2vw, 26px);
+  object-fit: contain;
+}
+
+.maxab-pdp-badges span {
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 10px;
+}
+
+.maxab-pdp-badge-offer {
+  background: #06452b;
+}
+
+.maxab-pdp-badge-featured {
+  background: #e4f4e9;
+  color: #075331 !important;
+}
+
+.maxab-pdp-image-arrow {
+  opacity: 1;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e0e9e2;
+  background: rgba(255,255,255,.96);
+  color: #06452b;
+  box-shadow: 0 4px 14px rgba(0,0,0,.06);
+}
+
+.maxab-pdp-image-arrow:hover {
+  background: #06452b;
+  color: white;
+}
+
+.maxab-pdp-image-count {
+  background: rgba(6,69,43,.84);
+  border-radius: 8px;
+}
+
+.maxab-pdp-thumbnails {
+  gap: 10px;
+  margin-top: 15px;
+  padding: 3px 2px 9px;
+  scrollbar-width: thin;
+}
+
+.maxab-pdp-thumbnails button {
+  flex: 0 0 75px;
+  width: 75px;
+  height: 75px;
+  border: 1px solid #e5ece7;
+  border-radius: 12px;
+  background: white;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.maxab-pdp-thumbnails button.selected {
+  border: 2px solid #168450;
+  box-shadow: 0 0 0 3px rgba(22,132,80,.11);
+}
+
+.maxab-pdp-image-hint {
+  font-size: 11px;
+  color: #83978a;
+}
+
+/* Product information */
+.maxab-pdp-information {
+  min-width: 0;
+  padding: 6px 0;
+}
+
+.maxab-pdp-category {
+  display: inline-flex;
+  width: fit-content;
+  background: #eaf6ee;
+  color: #137845;
+  padding: 9px 13px;
+  border-radius: 50px;
+  font-size: 10px;
+  letter-spacing: .8px;
+  margin-bottom: 17px;
+}
+
+.maxab-pdp-information h1 {
+  font-size: clamp(29px, 2.8vw, 41px);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -.9px;
+  color: #142f20;
+  margin: 0 0 15px;
+}
+
+.maxab-pdp-meta {
+  color: #83958a;
+  font-size: 12px;
+}
+
+.maxab-pdp-divider {
+  background: #e9eee9;
+  margin: 24px 0;
+}
+
+.maxab-pdp-pricing {
+  gap: 12px;
+}
+
+.maxab-pdp-pricing > strong {
+  color: #06452b;
+  font-size: clamp(34px, 3.2vw, 45px);
+  font-weight: 850;
+  letter-spacing: -1px;
+}
+
+.maxab-pdp-pricing del {
+  color: #98a69b;
+}
+
+.maxab-pdp-save {
+  background: #e7f6ed;
+  color: #147b48;
+  border-radius: 999px;
+  padding: 8px 12px;
+}
+
+.maxab-pdp-stock.available {
+  background: #e8f7ed;
+  color: #08743a;
+}
+
+.maxab-pdp-stock.unavailable {
+  background: #fff0f0;
+  color: #ba3333;
+}
+
+.maxab-pdp-description {
+  color: #5c7364;
+  font-size: 14px;
+  line-height: 1.9;
+  margin: 22px 0 25px;
+}
+
+/* Quantity */
+.maxab-pdp-quantity {
+  height: 52px;
+  border: 1px solid #d6e3da;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.maxab-pdp-quantity button {
+  width: 52px;
+  background: #f6f9f7;
+  color: #06452b;
+}
+
+.maxab-pdp-quantity > span {
+  min-width: 50px;
+  color: #173a27;
+  border-color: #e5ece6;
+}
+
+/* Conversion buttons */
+.maxab-pdp-actions {
+  display: grid;
+  grid-template-columns: .95fr 1.15fr;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.maxab-pdp-actions button {
+  min-height: 61px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 750;
+  transition:
+    background .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease;
+}
+
+.maxab-pdp-add {
+  background: #eff6f1;
+  color: #06452b !important;
+  border: 1px solid #bed8c8 !important;
+}
+
+.maxab-pdp-add:hover:not(:disabled) {
+  background: #e4f2e9;
+}
+
+.maxab-pdp-buy {
+  background: #06452b;
+  color: #fff;
+  box-shadow: 0 8px 19px rgba(6,69,43,.17);
+}
+
+.maxab-pdp-buy:hover:not(:disabled) {
+  background: #087149;
+  box-shadow: 0 10px 24px rgba(6,69,43,.24);
+}
+
+.maxab-pdp-actions button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* Trust badges */
+.maxab-pdp-benefits {
+  margin-top: 29px;
+  padding-top: 23px;
+  border-top: 1px solid #ebf0ec;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.maxab-pdp-benefits > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 11px;
+  min-width: 0;
+  border: 1px solid #e6eee7;
+  background: #f8fbf8;
+  border-radius: 11px;
+  color: #456d54;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.maxab-pdp-benefits svg {
+  flex-shrink: 0;
+  color: #168450;
+}
+
+/* Description panel */
+.maxab-pdp-description-panel {
+  margin-top: 25px;
+  border: 1px solid #e5ece7;
+  border-radius: 18px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 28px rgba(10,48,27,.035);
+}
+
+.maxab-pdp-description-tab {
+  color: #06452b;
+  border-bottom: 2px solid #168450;
+  padding: 21px 26px;
+}
+
+.maxab-pdp-description-content {
+  padding: 24px 28px 34px;
+}
+
+.maxab-pdp-description-content h2 {
+  color: #193b28;
+}
+
+.maxab-pdp-description-content p {
+  color: #5d7365;
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+  .maxab-pdp-product {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+}
+
+/* Mobile shopping experience */
+@media (max-width: 600px) {
+  .maxab-pdp-page {
+    background: #ffffff;
+  }
+
+  .maxab-pdp-container {
+    width: 100%;
+    padding: 12px 0 46px;
+  }
+
+  .maxab-pdp-breadcrumb {
+    padding: 0 16px;
+    margin-bottom: 17px;
+  }
+
+  .maxab-pdp-product {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 14px 24px;
+    gap: 22px;
+  }
+
+  .maxab-pdp-main-image {
+    border-radius: 15px;
+  }
+
+  .maxab-pdp-main-image > img {
+    padding: 12px;
+  }
+
+  .maxab-pdp-thumbnails button {
+    flex-basis: 65px;
+    width: 65px;
+    height: 65px;
+  }
+
+  .maxab-pdp-information h1 {
+    font-size: 26px;
+  }
+
+  .maxab-pdp-pricing > strong {
+    font-size: 35px;
+  }
+
+  .maxab-pdp-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .maxab-pdp-actions button {
+    min-height: 55px;
+    font-size: 12px;
+    padding: 10px 6px;
+  }
+
+  .maxab-pdp-benefits {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .maxab-pdp-benefits > div {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    font-size: 10px;
+    padding: 12px 5px;
+  }
+
+  .maxab-pdp-description-panel {
+    margin: 18px 14px 0;
+  }
+
+  .maxab-pdp-description-content {
+    padding: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maxab-pdp-page *,
+  .maxab-pdp-page *::before,
+  .maxab-pdp-page *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+
+/* MAXPRODUCT BUTTON COLORS START */
+
+.maxab-pdp-page .maxab-pdp-actions .maxab-pdp-add {
+  background: #eaf4ed !important;
+  color: #06452b !important;
+  border: 1px solid #bbd7c5 !important;
+  box-shadow: none !important;
+}
+
+.maxab-pdp-page .maxab-pdp-actions .maxab-pdp-add:hover:not(:disabled) {
+  background: #dceee2 !important;
+  transform: translateY(-2px);
+}
+
+.maxab-pdp-page .maxab-pdp-actions .maxab-pdp-buy {
+  background: #06452b !important;
+  color: #ffffff !important;
+  border: 1px solid #06452b !important;
+  box-shadow: 0 8px 20px rgba(6, 69, 43, .18);
+}
+
+.maxab-pdp-page .maxab-pdp-actions .maxab-pdp-buy:hover:not(:disabled) {
+  background: #087349 !important;
+  border-color: #087349 !important;
+  transform: translateY(-2px);
+}
+
+.maxab-pdp-page .maxab-pdp-actions button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* MAXPRODUCT BUTTON COLORS END */

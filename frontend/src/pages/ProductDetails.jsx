@@ -1,3 +1,5 @@
+import ProductSchema from "../components/seo/ProductSchema";
+import ReactMarkdown from "react-markdown";
 import { trackMetaEvent, metaProductData } from "../services/metaPixel";
 import { useEffect, useState } from "react";
 import {
@@ -138,6 +140,15 @@ export default function ProductDetails() {
     image: images[0] || ""
   };
 
+  const shortDescription = String(product.description || "")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[#*`_~>]/g, "")
+    .replace(/^[\s\-+•]+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 175);
+
   function addQuantity() {
     if (!inStock) return;
 
@@ -165,6 +176,7 @@ export default function ProductDetails() {
 
   return (
     <div className="maxab-pdp-page">
+      <ProductSchema product={product} />
       <SEO
         title={`${product.name} | MAXPRODUCT`}
         description={
@@ -316,10 +328,7 @@ export default function ProductDetails() {
               </span>
             </div>
 
-            <p className="maxab-pdp-description">
-              {product.description ||
-                "Discover this quality product at MAXPRODUCT. Shop with confidence and enjoy convenient home delivery."}
-            </p>
+            
 
             <div className="maxab-pdp-quantity-section">
               <label>Quantity</label>
@@ -358,6 +367,12 @@ export default function ProductDetails() {
             <div className="maxab-pdp-actions">
               <button
                 className="maxab-pdp-add"
+                style={{
+                  backgroundColor: "#eaf4ed",
+                  color: "#06452b",
+                  border: "1px solid #bbd7c5",
+                  boxShadow: "none"
+                }}
                 disabled={!inStock}
                 onClick={addQuantity}
               >
@@ -369,6 +384,12 @@ export default function ProductDetails() {
 
               <button
                 className="maxab-pdp-buy"
+                style={{
+                  backgroundColor: "#06452b",
+                  color: "#ffffff",
+                  border: "1px solid #06452b",
+                  boxShadow: "0 8px 20px rgba(6,69,43,.18)"
+                }}
                 disabled={!inStock}
                 onClick={buyNow}
               >
@@ -402,7 +423,11 @@ export default function ProductDetails() {
             </div>
             <div className="maxab-pdp-description-content">
               <h2>About This Product</h2>
-              <p>{product.description}</p>
+              <div className="maxab-pdp-rich-description">
+                <ReactMarkdown>
+                  {product.description}
+                </ReactMarkdown>
+              </div>
             </div>
           </section>
         )}

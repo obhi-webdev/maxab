@@ -549,3 +549,57 @@
     transition: none !important;
   }
 }
+
+
+/* MAXPRODUCT PRODUCT DESCRIPTION IMPROVEMENT */
+.maxab-pdp-description {
+  margin: 18px 0 20px;
+  color: #596e60;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.maxab-pdp-rich-description {
+  color: #455a4c;
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.maxab-pdp-rich-description h1,
+.maxab-pdp-rich-description h2,
+.maxab-pdp-rich-description h3 {
+  color: #123c27;
+  line-height: 1.4;
+  margin: 24px 0 12px;
+  font-weight: 750;
+}
+
+.maxab-pdp-rich-description h1 { font-size: 23px; }
+.maxab-pdp-rich-description h2 { font-size: 20px; }
+.maxab-pdp-rich-description h3 { font-size: 17px; }
+
+.maxab-pdp-rich-description p {
+  margin: 10px 0 17px;
+  white-space: normal;
+}
+
+.maxab-pdp-rich-description ul,
+.maxab-pdp-rich-description ol {
+  padding-left: 24px;
+  margin: 12px 0 20px;
+}
+
+.maxab-pdp-rich-description li {
+  margin-bottom: 9px;
+}
+
+.maxab-pdp-rich-description strong {
+  color: #163f2a;
+  font-weight: 750;
+}
+
+.maxab-pdp-rich-description a {
+  color: #087449;
+  text-decoration: underline;
+}
