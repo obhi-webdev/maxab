@@ -41,6 +41,33 @@ export function CartProvider({ children }) {
     setCartOpen(true);
   }
 
+  // Direct checkout: persist cart before navigating.
+  // Unlike addToCart, this never opens the cart drawer.
+  function buyNow(product) {
+    const quantity = Math.max(1, Number(product.quantity) || 1);
+
+    const existing = cart.find(item => item.id === product.id);
+
+    const nextCart = existing
+      ? cart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        )
+      : [...cart, { ...product, quantity }];
+
+    // Synchronous persistence prevents losing the item on page navigation.
+    localStorage.setItem("MAXPRODUCT-cart", JSON.stringify(nextCart));
+
+    setCart(nextCart);
+    setCartOpen(false);
+
+    trackMetaEvent(
+      "AddToCart",
+      metaProductData(product, quantity)
+    );
+  }
+
   function changeQuantity(id, delta) {
     setCart(current => current
       .map(item => item.id === id
@@ -59,7 +86,7 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider value={{
       cart, count, total, cartOpen, setCartOpen,
-      addToCart, changeQuantity, clearCart
+      addToCart, buyNow, changeQuantity, clearCart
     }}>
       {children}
     </CartContext.Provider>

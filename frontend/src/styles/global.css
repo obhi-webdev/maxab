@@ -2225,4 +2225,34 @@ body #root .cart-drawer .drawer-footer .button-primary {
 /* MAXPRODUCT MATCHED TAGLINE END */
 
 
+/* MAXPRODUCT CARD BUY NOW START */
+
+.shop-product-card .shop-add-cart.maxproduct-buy-now {
+  display: flex;
+  width: 100%;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: #06452B !important;
+  border: 1px solid #06452B !important;
+  color: #ffffff !important;
+  border-radius: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.shop-product-card .shop-add-cart.maxproduct-buy-now:hover {
+  background: #087647 !important;
+  border-color: #087647 !important;
+}
+
+@media (max-width: 767px) {
+  .shop-product-card .shop-add-cart.maxproduct-buy-now {
+    min-height: 46px;
+    font-size: 13px;
+  }
+}
+
+/* MAXPRODUCT CARD BUY NOW END */
 

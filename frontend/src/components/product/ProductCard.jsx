@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "../../context/CartContext";
 import ProductImage from "../common/ProductImage";
@@ -8,7 +8,7 @@ export default function ProductCard({
   isWishlisted,
   onWishlist
 }) {
-  const { addToCart } = useCart();
+  const { buyNow } = useCart();
 
   const discount = product.oldPrice > product.price
     ? Math.round(
@@ -93,11 +93,14 @@ export default function ProductCard({
         </div>
 
         <button
-          className="shop-add-cart"
-          onClick={() => addToCart(product)}
+          className="shop-add-cart maxproduct-buy-now"
+          onClick={() => {
+            buyNow(product);
+            window.location.assign("/checkout");
+          }}
         >
-          <ShoppingCart size={17}/>
-          Add to Cart
+          <Zap size={17}/>
+          Buy Now
         </button>
       </div>
     </motion.article>
