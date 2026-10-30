@@ -629,3 +629,447 @@
   margin-top: 2px;
   accent-color: #06452B;
 }
+
+
+/* MAXPRODUCT CHECKOUT HEADER V3 START */
+
+.mp-checkout-v3 .store-subpage-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 20px;
+  width: 100%;
+  padding: 18px max(4%, calc((100vw - 1200px)/2));
+  min-height: 92px;
+  background: #ffffff;
+  border-bottom: 1px solid #e3ede6;
+  box-shadow: 0 5px 20px rgba(6, 69, 43, .035);
+  box-sizing: border-box;
+}
+
+.mp-checkout-v3 .store-page-logo {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  color: #06452b;
+  font-family: Manrope, Inter, sans-serif;
+  font-size: clamp(23px, 2.7vw, 31px);
+  font-weight: 850;
+  letter-spacing: -1.3px;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.mp-checkout-v3 .store-page-logo span {
+  color: #168450;
+}
+
+/* Uses the existing Continue Shopping link */
+.mp-checkout-v3 .store-subpage-header > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 40px;
+  color: #526a59;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+/* Secure Checkout is visual only, not a new form control */
+.mp-checkout-v3 .store-subpage-header::after {
+  content: "✓  SECURE CHECKOUT";
+  grid-column: 1 / -1;
+  justify-self: start;
+  width: fit-content;
+  padding: 7px 12px;
+  border: 1px solid #dceee1;
+  border-radius: 100px;
+  background: #eef8f1;
+  color: #147344;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .8px;
+}
+
+/* Only checkout header, no changes to delivery form */
+@media (max-width: 767px) {
+  .mp-checkout-v3 .store-subpage-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 12px;
+    min-height: 0;
+    padding: 15px 16px;
+  }
+
+  .mp-checkout-v3 .store-page-logo {
+    font-size: clamp(21px, 5.4vw, 27px);
+    letter-spacing: -.9px;
+  }
+
+  .mp-checkout-v3 .store-subpage-header > a:last-child {
+    max-width: 145px;
+    text-align: right;
+    font-size: 11px;
+    line-height: 1.35;
+    gap: 5px;
+  }
+
+  .mp-checkout-v3 .store-subpage-header::after {
+    padding: 6px 10px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 370px) {
+  .mp-checkout-v3 .store-page-logo {
+    font-size: 20px;
+  }
+
+  .mp-checkout-v3 .store-subpage-header {
+    padding-inline: 12px;
+    column-gap: 8px;
+  }
+}
+
+/* MAXPRODUCT CHECKOUT HEADER V3 END */
+
+
+/* MAXPRODUCT PREMIUM CHECKOUT V4 START */
+
+/* Page foundation */
+.mp-checkout-v3 {
+  background: #f6f9f7;
+  color: #22382b;
+}
+
+/* Clean checkout introduction */
+.mp-checkout-v3 .checkout-container {
+  width: min(1160px, 94%);
+  margin: 30px auto 65px;
+}
+
+.mp-checkout-v3 .checkout-heading {
+  margin-bottom: 22px;
+}
+
+.mp-checkout-v3 .checkout-heading > span {
+  display: none;
+}
+
+.mp-checkout-v3 .checkout-heading h1 {
+  margin: 0 0 8px;
+  color: #163b29;
+  font-family: Manrope, Inter, sans-serif;
+  font-size: clamp(26px, 3.3vw, 38px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1.2px;
+}
+
+.mp-checkout-v3 .checkout-heading p {
+  margin: 0;
+  color: #819086;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Main desktop checkout layout */
+.mp-checkout-v3 .checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+  gap: 22px;
+  align-items: start;
+}
+
+/* Panels */
+.mp-checkout-v3 .checkout-panel {
+  min-width: 0;
+  padding: 26px;
+  background: #ffffff;
+  border: 1px solid #e2ebe4;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(18, 70, 40, .035);
+}
+
+.mp-checkout-v3 .checkout-panel h2 {
+  color: #193c29;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 0 0 22px;
+  letter-spacing: -.5px;
+}
+
+/* Form elements */
+.mp-checkout-v3 .checkout-field {
+  margin-bottom: 16px;
+}
+
+.mp-checkout-v3 .checkout-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #304539;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.mp-checkout-v3 .checkout-field input,
+.mp-checkout-v3 .checkout-field select,
+.mp-checkout-v3 .checkout-field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 13px;
+  border: 1px solid #dce7df;
+  border-radius: 10px;
+  background: #fcfefd;
+  color: #263b2d;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.mp-checkout-v3 .checkout-field textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.mp-checkout-v3 .checkout-field input:focus,
+.mp-checkout-v3 .checkout-field select:focus,
+.mp-checkout-v3 .checkout-field textarea:focus {
+  border-color: #168451;
+  box-shadow: 0 0 0 3px rgba(22, 132, 81, .11);
+}
+
+.mp-checkout-v3 .checkout-field input::placeholder,
+.mp-checkout-v3 .checkout-field textarea::placeholder {
+  color: #9ba9a0;
+}
+
+/* Cash on Delivery note */
+.mp-checkout-v3 .checkout-payment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid #dcefe2;
+  border-radius: 12px;
+  background: #eef8f1;
+  color: #246a41;
+}
+
+.mp-checkout-v3 .checkout-payment strong {
+  font-size: 14px;
+}
+
+.mp-checkout-v3 .checkout-payment p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Summary card */
+.mp-checkout-v3 .checkout-summary {
+  min-width: 0;
+}
+
+.mp-checkout-v3 .checkout-summary h2 {
+  margin-bottom: 15px;
+}
+
+.mp-checkout-v3 .checkout-line {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf1ed;
+}
+
+.mp-checkout-v3 .checkout-line strong {
+  color: #2b4032;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mp-checkout-v3 .checkout-line small {
+  font-size: 11px;
+  color: #8b9a8f;
+}
+
+.mp-checkout-v3 .checkout-line b {
+  color: #183e28;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.mp-checkout-v3 .checkout-totals {
+  margin: 17px 0;
+}
+
+.mp-checkout-v3 .checkout-totals > div {
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.mp-checkout-v3 .checkout-totals .checkout-grand {
+  margin-top: 17px;
+  padding-top: 16px;
+  border-top: 1px solid #e4ece6;
+}
+
+.mp-checkout-v3 .checkout-grand strong,
+.mp-checkout-v3 .checkout-grand b {
+  color: #06452b;
+}
+
+/* Consent: preserve interactive checkbox */
+.mp-checkout-v3 .maxab-marketing-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 15px 0 19px;
+  color: #718278;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.mp-checkout-v3 .maxab-marketing-consent input {
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  accent-color: #087647;
+}
+
+/* Checkout CTA */
+.mp-checkout-v3 .checkout-submit {
+  width: 100%;
+  min-height: 53px;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #087647;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background-color .2s, box-shadow .2s;
+}
+
+.mp-checkout-v3 .checkout-submit:not(:disabled):hover {
+  background: #06452b;
+  box-shadow: 0 7px 18px rgba(6, 69, 43, .15);
+}
+
+.mp-checkout-v3 .checkout-submit:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+.mp-checkout-v3 .checkout-disclaimer {
+  color: #87978c;
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .mp-checkout-v3 .checkout-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .mp-checkout-v3 .checkout-container {
+    max-width: 680px;
+  }
+}
+
+/* Mobile checkout */
+@media (max-width: 767px) {
+  .mp-checkout-v3 .checkout-container {
+    width: calc(100% - 28px);
+    margin: 21px auto 34px;
+  }
+
+  .mp-checkout-v3 .checkout-heading {
+    margin-bottom: 17px;
+  }
+
+  .mp-checkout-v3 .checkout-heading h1 {
+    font-size: clamp(24px, 6vw, 30px);
+    letter-spacing: -.8px;
+    line-height: 1.2;
+  }
+
+  .mp-checkout-v3 .checkout-heading p {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .mp-checkout-v3 .checkout-grid {
+    gap: 15px;
+  }
+
+  .mp-checkout-v3 .checkout-panel {
+    padding: 18px 16px;
+    border-radius: 13px;
+  }
+
+  .mp-checkout-v3 .checkout-panel h2 {
+    font-size: 18px;
+    margin-bottom: 17px;
+  }
+
+  .mp-checkout-v3 .checkout-field {
+    margin-bottom: 14px;
+  }
+
+  .mp-checkout-v3 .checkout-field label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .mp-checkout-v3 .checkout-field input,
+  .mp-checkout-v3 .checkout-field select,
+  .mp-checkout-v3 .checkout-field textarea {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 11px 12px;
+  }
+
+  .mp-checkout-v3 .checkout-field textarea {
+    min-height: 76px;
+  }
+
+  .mp-checkout-v3 .checkout-payment {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .mp-checkout-v3 .checkout-summary {
+    padding: 19px 16px;
+  }
+
+  .mp-checkout-v3 .checkout-submit {
+    min-height: 52px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-checkout-v3 .checkout-field input,
+  .mp-checkout-v3 .checkout-field select,
+  .mp-checkout-v3 .checkout-field textarea,
+  .mp-checkout-v3 .checkout-submit {
+    transition: none;
+  }
+}
+
+/* MAXPRODUCT PREMIUM CHECKOUT V4 END */
+

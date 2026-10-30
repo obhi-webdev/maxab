@@ -603,3 +603,95 @@
   color: #087449;
   text-decoration: underline;
 }
+
+
+/* MAXPRODUCT PDP MOBILE BUTTON STACK START */
+@media (max-width: 768px) {
+  .maxab-pdp-actions {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .maxab-pdp-buy {
+    order: 1;
+    width: 100%;
+  }
+
+  .maxab-pdp-add {
+    order: 2;
+    width: 100%;
+  }
+
+  .maxab-pdp-actions button {
+    width: 100%;
+    min-height: 54px;
+    justify-content: center;
+  }
+}
+/* MAXPRODUCT PDP MOBILE BUTTON STACK END */
+
+
+/* MAXPRODUCT PDP STACKED BUTTONS START */
+
+/* Desktop + Tablet + Mobile */
+.maxab-pdp-page .maxab-pdp-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  width: 100% !important;
+  grid-template-columns: none !important;
+}
+
+.maxab-pdp-page .maxab-pdp-actions .maxab-pdp-buy {
+  order: 1 !important;
+  width: 100% !important;
+  flex: 0 0 auto !important;
+  min-height: 56px !important;
+  background: #06452B !important;
+  color: #ffffff !important;
+  border: 1px solid #06452B !important;
+  border-radius: 10px !important;
+}
+
+.maxab-pdp-page .maxab-pdp-actions .maxab-pdp-add {
+  order: 2 !important;
+  width: 100% !important;
+  flex: 0 0 auto !important;
+  min-height: 56px !important;
+  background: #EAF5ED !important;
+  color: #06452B !important;
+  border: 1px solid #BDDCC7 !important;
+  border-radius: 10px !important;
+}
+
+.maxab-pdp-page .maxab-pdp-actions button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 13px 18px !important;
+  font-size: 15px !important;
+  font-weight: 750 !important;
+  box-sizing: border-box !important;
+}
+
+.maxab-pdp-page .maxab-pdp-actions button:disabled {
+  opacity: .55 !important;
+  cursor: not-allowed !important;
+}
+
+@media (max-width: 767px) {
+  .maxab-pdp-page .maxab-pdp-actions {
+    gap: 10px !important;
+  }
+
+  .maxab-pdp-page .maxab-pdp-actions button {
+    min-height: 52px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* MAXPRODUCT PDP STACKED BUTTONS END */
+

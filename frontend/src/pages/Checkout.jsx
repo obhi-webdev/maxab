@@ -200,7 +200,7 @@ export default function Checkout() {
   }
 
   return (
-    <div className="store-subpage">
+    <div className="store-subpage mp-checkout-v3">
       <div className="store-subpage-header">
         <a className="store-page-logo" href="/">MAXPRODUCT<span>.</span></a>
         <a href="/#shop"><ArrowLeft size={18}/> Continue Shopping</a>

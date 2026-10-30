@@ -1887,3 +1887,284 @@ textarea {
   }
 }
 
+
+/* MAXPRODUCT MOBILE PRODUCT CARD FIX START */
+
+.shop-product-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+}
+
+.shop-product-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-product-info h3 {
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  margin-bottom: 14px;
+}
+
+.shop-product-price {
+  margin-top: auto;
+  margin-bottom: 16px;
+}
+
+.shop-add-cart {
+  width: 100%;
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  .shop-product-info {
+    padding: 13px 12px 15px;
+  }
+
+  .shop-product-info h3 {
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 3em;
+  }
+
+  .shop-product-price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .shop-product-price strong {
+    font-size: 17px;
+  }
+
+  .shop-add-cart {
+    min-height: 44px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+}
+
+/* MAXPRODUCT MOBILE PRODUCT CARD FIX END */
+
+
+/* MAXPRODUCT CART DRAWER V2 START */
+
+body #root .drawer-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483001 !important;
+  display: flex !important;
+  justify-content: flex-end;
+  background: rgba(2, 22, 13, .58);
+  backdrop-filter: blur(3px);
+}
+
+body #root .drawer-overlay .cart-drawer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100%);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  color: #20392a;
+  box-shadow: -12px 0 45px rgba(0,0,0,.15);
+}
+
+/* Always-visible cart heading */
+body #root .cart-drawer .drawer-header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  padding: 16px 22px;
+  border-bottom: 1px solid #e6eee8;
+  background: #fff;
+}
+
+body #root .cart-drawer .drawer-header h2 {
+  margin: 0;
+  color: #123b27;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+body #root .cart-drawer .drawer-header button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e2eae4;
+  border-radius: 11px;
+  background: #f4f8f5;
+  color: #06452b;
+  cursor: pointer;
+}
+
+/* Scroll only the product list */
+body #root .cart-drawer .drawer-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 20px 24px;
+  background: #fff;
+  -webkit-overflow-scrolling: touch;
+}
+
+body #root .cart-drawer .cart-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid #e8eee9;
+}
+
+body #root .cart-drawer .cart-item > img,
+body #root .cart-drawer .cart-item > .image-placeholder {
+  width: 88px;
+  height: 100px;
+  flex: 0 0 88px;
+  object-fit: contain;
+  border: 1px solid #edf0ed;
+  border-radius: 10px;
+  background: #f7faf7;
+}
+
+body #root .cart-drawer .cart-item-info {
+  min-width: 0;
+  flex: 1;
+}
+
+body #root .cart-drawer .cart-item-info h3 {
+  margin: 0 0 9px;
+  color: #213a2b;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+body #root .cart-drawer .cart-item-info strong {
+  color: #087647;
+  font-size: 17px;
+}
+
+body #root .cart-drawer .quantity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 13px;
+  border: 1px solid #dce7df;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+body #root .cart-drawer .quantity button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: #f5f9f6;
+  color: #06452b;
+  cursor: pointer;
+}
+
+body #root .cart-drawer .quantity span {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  font-weight: 700;
+}
+
+/* Checkout summary remains visible */
+body #root .cart-drawer .drawer-footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding: 20px 22px max(22px, env(safe-area-inset-bottom));
+  border-top: 1px solid #e4ece6;
+  background: #fff;
+  box-shadow: 0 -7px 22px rgba(8, 40, 20, .035);
+}
+
+body #root .cart-drawer .cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 17px;
+  color: #334c3a;
+}
+
+body #root .cart-drawer .cart-total strong {
+  color: #06452b;
+  font-size: 22px;
+}
+
+body #root .cart-drawer .drawer-footer p {
+  color: #819084;
+  font-size: 12px;
+  margin: 12px 0 16px;
+  line-height: 1.55;
+}
+
+body #root .cart-drawer .drawer-footer .button-primary {
+  display: flex;
+  width: 100%;
+  min-height: 54px;
+  justify-content: center;
+  align-items: center;
+  padding: 13px 16px;
+  border-radius: 11px;
+  background: #06452b;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  body #root .drawer-overlay .cart-drawer {
+    width: 100vw;
+    max-width: 100%;
+  }
+
+  body #root .cart-drawer .drawer-header {
+    min-height: 64px;
+    padding: 12px 17px;
+  }
+
+  body #root .cart-drawer .drawer-content {
+    padding: 8px 17px 22px;
+  }
+
+  body #root .cart-drawer .drawer-footer {
+    padding: 17px 17px max(18px, env(safe-area-inset-bottom));
+  }
+
+  body #root .cart-drawer .cart-item > img,
+  body #root .cart-drawer .cart-item > .image-placeholder {
+    width: 78px;
+    height: 88px;
+    flex-basis: 78px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body #root .cart-drawer * {
+    transition: none !important;
+  }
+}
+
+/* MAXPRODUCT CART DRAWER V2 END */
+
