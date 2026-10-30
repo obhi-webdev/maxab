@@ -124,7 +124,7 @@ export default function Header({
             ) : (
               <>
                 MAXPRODUCT
-                <small>EVERYDAY ESSENTIALS</small>
+                <small>EVERYDAYESSENTIALS</small>
               </>
             )}
           </a>

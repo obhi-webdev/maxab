@@ -2168,3 +2168,61 @@ body #root .cart-drawer .drawer-footer .button-primary {
 
 /* MAXPRODUCT CART DRAWER V2 END */
 
+
+
+
+/* MAXPRODUCT MATCHED TAGLINE START */
+
+.site-header .site-logo.maxab-dynamic-logo {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  width: max-content;
+  max-width: 100%;
+  font-size: 26px !important;
+  font-weight: 850 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.8px !important;
+  white-space: nowrap;
+}
+
+.site-header .site-logo.maxab-dynamic-logo small {
+  display: block !important;
+  width: auto !important;
+  margin-top: 5px !important;
+  font-size: 8px !important;
+  font-weight: 650 !important;
+  letter-spacing: 1.8px !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+  text-align-last: auto !important;
+  word-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 991px) {
+  .site-header .site-logo.maxab-dynamic-logo {
+    font-size: 24px !important;
+  }
+
+  .site-header .site-logo.maxab-dynamic-logo small {
+    font-size: 7px !important;
+    letter-spacing: 1.6px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header .site-logo.maxab-dynamic-logo {
+    font-size: 21px !important;
+  }
+
+  .site-header .site-logo.maxab-dynamic-logo small {
+    font-size: 6px !important;
+    letter-spacing: 1.2px !important;
+  }
+}
+
+/* MAXPRODUCT MATCHED TAGLINE END */
+
+
+
