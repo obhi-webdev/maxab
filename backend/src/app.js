@@ -19,6 +19,12 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
+// Trust one reverse-proxy hop in production.
+// Adjust only after verifying the hosting proxy chain.
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 app.disable("x-powered-by");
 
 app.use(helmet());
