@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard, Package, Plus, Pencil,
   Trash2, LogOut, Save, X, RefreshCw,
-  ArrowLeft, ShieldCheck
+  ArrowLeft, ShieldCheck, Menu
 } from "lucide-react";
 import "./admin.css";
 import "./adminMinimal.css";
+import "./adminMobile.css";
 
 const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
@@ -50,6 +51,8 @@ async function request(path, options = {}, token = "") {
 function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // MAXPRODUCT_REMEMBER_ME_V1
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -64,7 +67,7 @@ function AdminLogin({ onLogin }) {
         body: JSON.stringify({ email, password })
       });
 
-      onLogin(result.token);
+      onLogin(result.token, rememberMe);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -105,6 +108,15 @@ function AdminLogin({ onLogin }) {
           autoComplete="current-password"
           required
         />
+
+        <label className="mp-admin-remember">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={e => setRememberMe(e.target.checked)}
+          />
+          <span>Remember Me</span>
+        </label>
 
         <button className="admin-primary" disabled={loading}>
           {loading ? "Signing in..." : "Sign In"}
@@ -488,12 +500,61 @@ function Dashboard({ token, onLogout }) {
     }
   }
 
+  // MAXPRODUCT_ADMIN_MOBILE_V1
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const handleSidebarClick = (event) => {
+    if (event.target.closest("a, button")) {
+      closeMobileMenu();
+    }
+  };
+
   const active = products.filter(p => p.isActive).length;
   const lowStock = products.filter(p => p.stock <= 5).length;
 
   return (
-    <div className="admin-shell">
-      <aside className="admin-sidebar">
+    <div className="admin-shell maxproduct-admin-responsive">
+      <header className="mp-admin-mobile-header">
+        <a href="/admin/dashboard" className="mp-admin-mobile-brand">
+          MAXPRODUCT<span>.</span>
+          <small>ADMIN PANEL</small>
+        </a>
+        <button
+          type="button"
+          className="mp-admin-menu-toggle"
+          aria-label={mobileMenuOpen ? "Close admin menu" : "Open admin menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mp-admin-sidebar"
+          onClick={() => setMobileMenuOpen(value => !value)}
+        >
+          {mobileMenuOpen ? <X size={23}/> : <Menu size={23}/>}
+        </button>
+      </header>
+
+      {mobileMenuOpen && (
+        <button
+          type="button"
+          className="mp-admin-menu-backdrop"
+          aria-label="Close navigation menu"
+          onClick={closeMobileMenu}
+        />
+      )}
+
+      <aside
+        id="mp-admin-sidebar"
+        className={`admin-sidebar ${mobileMenuOpen ? "mp-admin-sidebar-open" : ""}`}
+        onClick={handleSidebarClick}
+      >
+        <button
+          type="button"
+          className="mp-admin-sidebar-close"
+          aria-label="Close admin menu"
+          onClick={closeMobileMenu}
+        >
+          <X size={21}/>
+        </button>
         <a href="/admin/dashboard" className="admin-sidebar-logo">
           MAXPRODUCT<span>.</span>
           <small>ADMIN PANEL</small>
@@ -1002,18 +1063,26 @@ function OrdersPanel({ token }) {
 }
 
 export default function AdminApp() {
-  const [token, setToken] = useState(
-    () => sessionStorage.getItem("MAXPRODUCT-admin-token") || ""
+  const [token, setToken] = useState(() =>
+    sessionStorage.getItem("MAXPRODUCT-admin-token") ||
+    localStorage.getItem("MAXPRODUCT-admin-token") ||
+    ""
   );
 
-  function login(value) {
-    sessionStorage.setItem("MAXPRODUCT-admin-token", value);
+  function login(value, remember = false) {
+    sessionStorage.removeItem("MAXPRODUCT-admin-token");
+    localStorage.removeItem("MAXPRODUCT-admin-token");
+
+    const storage = remember ? localStorage : sessionStorage;
+    storage.setItem("MAXPRODUCT-admin-token", value);
+
     setToken(value);
     window.history.replaceState({}, "", "/admin/dashboard");
   }
 
   function logout() {
     sessionStorage.removeItem("MAXPRODUCT-admin-token");
+    localStorage.removeItem("MAXPRODUCT-admin-token");
     setToken("");
     window.history.replaceState({}, "", "/admin/login");
   }

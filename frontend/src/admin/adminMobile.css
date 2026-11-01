@@ -1,0 +1,285 @@
+
+/* MAXPRODUCT ADMIN MOBILE V1 */
+
+/* Desktop keeps its existing sidebar */
+.mp-admin-mobile-header,
+.mp-admin-menu-backdrop,
+.mp-admin-sidebar-close {
+  display: none;
+}
+
+.maxproduct-admin-responsive {
+  min-width: 0;
+}
+
+.maxproduct-admin-responsive .admin-main {
+  min-width: 0;
+}
+
+@media screen and (max-width: 900px) {
+
+  .maxproduct-admin-responsive {
+    display: block;
+    width: 100%;
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    min-height: 66px;
+    padding: 12px 17px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2eae4;
+    box-sizing: border-box;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-mobile-brand {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    color: #06452b;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 850;
+    letter-spacing: -.7px;
+    text-decoration: none;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-mobile-brand span {
+    color: #188854;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-mobile-brand small {
+    margin-top: 4px;
+    color: #758a7b;
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    font-weight: 700;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-menu-toggle {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: 1px solid #dce8df;
+    border-radius: 11px;
+    background: #eff7f1;
+    color: #06452b;
+    cursor: pointer;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1190;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: rgba(0, 22, 11, .5);
+    cursor: pointer;
+  }
+
+  .maxproduct-admin-responsive .admin-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1200;
+    width: min(315px, 86vw);
+    min-width: 0;
+    max-width: 86vw;
+    height: 100dvh;
+    min-height: 0;
+    padding: 55px 17px 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #ffffff;
+    box-shadow: 12px 0 35px rgba(0, 0, 0, .12);
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition: transform .25s ease, visibility .25s ease;
+  }
+
+  .maxproduct-admin-responsive .admin-sidebar.mp-admin-sidebar-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .maxproduct-admin-responsive .mp-admin-sidebar-close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 12px;
+    right: 13px;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #e0e9e2;
+    border-radius: 9px;
+    background: #f3f8f4;
+    color: #06452b;
+    cursor: pointer;
+  }
+
+  .maxproduct-admin-responsive .admin-sidebar-logo {
+    display: block;
+    margin-bottom: 20px;
+    padding: 0 4px 17px;
+  }
+
+  .maxproduct-admin-responsive .admin-sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .maxproduct-admin-responsive .admin-sidebar-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 43px;
+    margin: 0;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    border-radius: 9px;
+    text-align: left;
+    white-space: normal;
+    cursor: pointer;
+  }
+
+  .maxproduct-admin-responsive .admin-main {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 20px 14px 40px;
+    box-sizing: border-box;
+  }
+
+  .maxproduct-admin-responsive .admin-page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .maxproduct-admin-responsive .admin-page-header h1 {
+    font-size: clamp(23px, 5.4vw, 30px);
+  }
+
+  .maxproduct-admin-responsive .admin-page-header .admin-primary {
+    width: 100%;
+    min-height: 45px;
+    justify-content: center;
+  }
+
+  .maxproduct-admin-responsive .admin-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .maxproduct-admin-responsive .admin-stat,
+  .maxproduct-admin-responsive .orders-stat {
+    min-width: 0;
+    padding: 15px;
+  }
+
+  .maxproduct-admin-responsive .admin-table-section,
+  .maxproduct-admin-responsive .admin-product-form,
+  .maxproduct-admin-responsive .orders-management,
+  .maxproduct-admin-responsive .orders-panel {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .maxproduct-admin-responsive .admin-table-scroll,
+  .maxproduct-admin-responsive .orders-table-scroll {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .maxproduct-admin-responsive .admin-table,
+  .maxproduct-admin-responsive .orders-table {
+    min-width: 720px;
+  }
+
+  .maxproduct-admin-responsive .orders-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .maxproduct-admin-responsive .orders-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .maxproduct-admin-responsive .orders-toolbar input,
+  .maxproduct-admin-responsive .orders-toolbar select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  .maxproduct-admin-responsive .admin-form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .maxproduct-admin-responsive .admin-form-grid > * {
+    min-width: 0;
+    grid-column: 1 / -1;
+  }
+
+  .maxproduct-admin-responsive .admin-field input,
+  .maxproduct-admin-responsive .admin-field select,
+  .maxproduct-admin-responsive .admin-field textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .maxproduct-admin-responsive .admin-main {
+    padding-inline: 10px;
+  }
+
+  .maxproduct-admin-responsive .admin-stat-grid {
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maxproduct-admin-responsive .admin-sidebar {
+    transition: none;
+  }
+}
+
+@media print {
+  .maxproduct-admin-responsive .mp-admin-mobile-header,
+  .maxproduct-admin-responsive .mp-admin-menu-backdrop,
+  .maxproduct-admin-responsive .mp-admin-sidebar-close {
+    display: none !important;
+  }
+}

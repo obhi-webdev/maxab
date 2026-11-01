@@ -1384,3 +1384,42 @@
     padding: 17px;
   }
 }
+
+
+/* MAXPRODUCT REMEMBER ME STYLE START */
+
+.admin-login-card .mp-admin-remember {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 17px 0 21px;
+  color: #405c49;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.admin-login-card .mp-admin-remember input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin: 0;
+  padding: 0;
+  accent-color: #168451;
+  cursor: pointer;
+}
+
+.admin-login-card .mp-admin-remember span {
+  display: inline-block;
+}
+
+@media (max-width: 650px) {
+  .admin-login-card .mp-admin-remember {
+    margin: 16px 0 19px;
+    font-size: 13px;
+  }
+}
+
+/* MAXPRODUCT REMEMBER ME STYLE END */
+
