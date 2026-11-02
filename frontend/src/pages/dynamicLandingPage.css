@@ -968,3 +968,142 @@
     margin: 0 auto;
   }
 }
+
+
+/* MAXPRODUCT HERO IMAGE VISIBILITY FIX */
+
+.mpl-hero-visual {
+  width: 100%;
+  min-width: 0;
+}
+
+.mpl-hero-image-frame {
+  height: 600px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  background: #fff;
+  border: 5px solid #fff;
+  border-radius: 24px;
+}
+
+.mpl-hero-image-frame .mpl-hero-img {
+  display: block;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 15px;
+  background: #fff8f4;
+}
+
+.mpl-hero-image-frame .mpl-image-label {
+  position: static;
+  inset: auto;
+  width: 100%;
+  flex: 0 0 auto;
+  padding: 12px 15px;
+  box-shadow: none;
+  border: 1px solid #f0e5df;
+  background: #fffaf8;
+  border-radius: 12px;
+}
+
+.mpl-hero-image-frame .mpl-image-discount {
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+}
+
+.mpl-hero-thumbs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.mpl-hero-thumbs button {
+  width: 82px;
+  height: 82px;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.mpl-hero-thumbs button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .mpl-hero-image-frame {
+    height: 500px;
+  }
+}
+
+@media (max-width: 700px) {
+  .mpl-hero-image-frame {
+    height: min(120vw, 520px);
+    min-height: 350px;
+    padding: 7px;
+    border-width: 3px;
+    border-radius: 18px;
+  }
+
+  .mpl-hero-thumbs {
+    gap: 9px;
+  }
+
+  .mpl-hero-thumbs button {
+    width: 65px;
+    height: 65px;
+  }
+
+  .mpl-hero-image-frame .mpl-image-label {
+    padding: 9px 12px;
+  }
+}
+
+
+/* MAXPRODUCT IMAGE HOVER ZOOM */
+
+@media (hover: hover) and (pointer: fine) {
+  .mpl-hero-image-frame {
+    overflow: hidden;
+  }
+
+  .mpl-hero-image-frame .mpl-hero-img {
+    transition: transform 0.45s ease;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .mpl-hero-image-frame:hover .mpl-hero-img {
+    transform: scale(1.08);
+  }
+
+  .mpl-hero-image-frame .mpl-image-label,
+  .mpl-hero-image-frame .mpl-image-discount {
+    position: relative;
+    z-index: 2;
+  }
+
+  .mpl-hero-image-frame .mpl-image-discount {
+    position: absolute;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mpl-hero-image-frame .mpl-hero-img {
+    transition: none !important;
+  }
+}
