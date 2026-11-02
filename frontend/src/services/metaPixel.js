@@ -11,7 +11,7 @@ let initializedPixel = "";
 
 export function getMetaConsent() {
   try {
-    return localStorage.getItem(CONSENT_KEY) === "yes";
+    return localStorage.getItem(CONSENT_KEY) !== "no";
   } catch {
     return false;
   }
@@ -266,7 +266,7 @@ function initializeStorefrontTracking() {
     trackMetaEvent("PageView");
   }
 
-  showConsentChoice();
+  // Opt-out mode: no consent popup on storefront.
 }
 
 if (typeof window !== "undefined") {
