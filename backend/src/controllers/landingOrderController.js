@@ -229,3 +229,41 @@ export async function changeLandingOrderStatus(req, res, next) {
     next(error);
   }
 }
+
+
+export async function deleteLandingOrder(req, res, next) {
+  try {
+    const { isValidObjectId } = await import("mongoose");
+
+    if (!isValidObjectId(req.params.id)) {
+      return fail(res, 400, "Invalid landing order ID");
+    }
+
+    const order = await LandingOrder.findById(req.params.id);
+
+    if (!order) {
+      return fail(res, 404, "Landing order not found");
+    }
+
+    if (order.status === "delivered") {
+      return fail(
+        res,
+        409,
+        "Delivered orders cannot be permanently deleted"
+      );
+    }
+
+    await LandingOrder.deleteOne({ _id: order._id });
+
+    return res.json({
+      success: true,
+      message: "Landing order deleted successfully",
+      data: {
+        id: String(order._id),
+        orderNumber: order.orderNumber
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}

@@ -2,7 +2,8 @@ import { rateLimit } from "express-rate-limit";
 import {
   createLandingOrder,
   listLandingOrders,
-  changeLandingOrderStatus
+  changeLandingOrderStatus,
+  deleteLandingOrder
 } from "../controllers/landingOrderController.js";
 import { Router } from "express";
 import { requireAdmin } from "../middleware/auth.js";
@@ -38,6 +39,7 @@ router.post(
 router.use(requireAdmin);
 router.get("/orders/admin", listLandingOrders);
 router.patch("/orders/:id/status", changeLandingOrderStatus);
+router.delete("/orders/:id", deleteLandingOrder);
 
 
 router.get("/", listLandingPages);

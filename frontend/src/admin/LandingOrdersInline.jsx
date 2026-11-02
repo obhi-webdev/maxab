@@ -103,6 +103,54 @@ export default function LandingOrdersInline({ token }) {
     }
   }
 
+
+  async function deleteLandingOrder(order) {
+    if (saving || order.status === "delivered") return;
+
+    const confirmed = window.confirm(
+      `Permanently delete landing order ${order.orderNumber}?\n\n` +
+      "This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    setSaving(order._id);
+    setError("");
+    setNotice("");
+
+    try {
+      const response = await fetch(
+        `${API}/landing-pages/orders/${encodeURIComponent(order._id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Delete failed");
+      }
+
+      setOrders(current =>
+        current.filter(item => item._id !== order._id)
+      );
+
+      setExpanded(current =>
+        current === order._id ? "" : current
+      );
+
+      setNotice(`${order.orderNumber} deleted successfully.`);
+    } catch (err) {
+      setError(err.message || "Unable to delete landing order");
+    } finally {
+      setSaving("");
+    }
+  }
+
   const filtered = orders.filter(order => {
     const text = [
       order.orderNumber,
@@ -287,6 +335,30 @@ export default function LandingOrdersInline({ token }) {
                 </td>
 
                 <td>
+
+                  <button
+                    type="button"
+                    disabled={Boolean(saving) || order.status === "delivered"}
+                    onClick={() => deleteLandingOrder(order)}
+                    title={order.status === "delivered"
+                      ? "Delivered orders cannot be deleted"
+                      : "Permanently delete this landing order"}
+                    style={{
+                      display: "block",
+                      marginTop: 8,
+                      padding: "8px 11px",
+                      background: "#fff1f2",
+                      color: "#be123c",
+                      borderRadius: 8,
+                      border: "1px solid #fecaca",
+                      fontWeight: 700,
+                      cursor: order.status === "delivered"
+                        ? "not-allowed" : "pointer",
+                      opacity: order.status === "delivered" ? 0.5 : 1
+                    }}
+                  >
+                    {saving === order._id ? "Processing..." : "Delete"}
+                  </button>
                   <button
                     type="button"
                     onClick={() => setExpanded(current =>

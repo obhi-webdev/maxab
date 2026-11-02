@@ -80,6 +80,47 @@ export default function LandingOrders() {
     }
   }
 
+
+  async function deleteLandingOrder(order) {
+    if (order.status === "delivered" || savingId) return;
+
+    const confirmed = window.confirm(
+      `Permanently delete landing order ${order.orderNumber}?\n\n` +
+      "This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    setSavingId(order._id);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${API}/landing-pages/orders/${encodeURIComponent(order._id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token()}`
+          }
+        }
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Delete failed");
+      }
+
+      setOrders(current =>
+        current.filter(item => item._id !== order._id)
+      );
+    } catch (err) {
+      setError(err.message || "Unable to delete order");
+    } finally {
+      setSavingId("");
+    }
+  }
+
   const nextStatuses = {
     pending: ["confirmed", "cancelled"],
     confirmed: ["shipped", "cancelled"],
@@ -164,6 +205,28 @@ export default function LandingOrders() {
               </p>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+
+                <button
+                  type="button"
+                  disabled={Boolean(savingId) || order.status === "delivered"}
+                  onClick={() => deleteLandingOrder(order)}
+                  title={order.status === "delivered"
+                    ? "Delivered orders cannot be deleted"
+                    : "Permanently delete this landing order"}
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: 8,
+                    border: "1px solid #fecaca",
+                    background: "#fff1f2",
+                    color: "#be123c",
+                    fontWeight: 700,
+                    cursor: order.status === "delivered"
+                      ? "not-allowed" : "pointer",
+                    opacity: order.status === "delivered" ? 0.5 : 1
+                  }}
+                >
+                  {savingId === order._id ? "Processing..." : "Delete Order"}
+                </button>
                 {(nextStatuses[order.status] || []).map(status => (
                   <button
                     key={status}
