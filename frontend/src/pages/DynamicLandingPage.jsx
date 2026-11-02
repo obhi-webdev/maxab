@@ -168,6 +168,10 @@ export default function DynamicLandingPage() {
       }],
       currency: "BDT",
       value: Number(page.pricing?.salePrice || 0)
+    }).then(success => {
+      if (!success) trackedContent.current.delete(id);
+    }).catch(() => {
+      trackedContent.current.delete(id);
     });
   }, [page, marketingConsent]);
 
