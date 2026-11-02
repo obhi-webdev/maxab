@@ -1,7 +1,13 @@
+import {
+  getMetaConsent,
+  setMetaConsent,
+  trackMetaEvent,
+  trackMetaPurchase
+} from "../services/metaPixel";
 import { CartProvider } from "../context/CartContext";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -59,6 +65,11 @@ export default function DynamicLandingPage() {
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState(null);
   const [videoError, setVideoError] = useState(false);
+
+  const [marketingConsent, setMarketingConsent] = useState(getMetaConsent);
+  const trackedContent = useRef(new Set());
+  const checkoutTracked = useRef(false);
+
 
 
   useEffect(() => {
@@ -179,8 +190,109 @@ export default function DynamicLandingPage() {
   ];
 
 
+
+  useEffect(() => {
+    function syncConsent() {
+      setMarketingConsent(getMetaConsent());
+    }
+
+    window.addEventListener("maxproduct-meta-consent-change", syncConsent);
+
+    return () => {
+      window.removeEventListener("maxproduct-meta-consent-change", syncConsent);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!page?._id || !marketingConsent) return;
+
+    const id = String(page._id);
+    if (trackedContent.current.has(id)) return;
+    trackedContent.current.add(id);
+
+    trackMetaEvent("ViewContent", {
+      content_ids: [id],
+      content_type: "product",
+      content_name: page.title,
+      contents: [{
+        id,
+        quantity: 1,
+        item_price: Number(page.pricing?.salePrice || 0)
+      }],
+      currency: "BDT",
+      value: Number(page.pricing?.salePrice || 0)
+    });
+  }, [page, marketingConsent]);
+
+  function startCheckoutTracking() {
+    if (checkoutTracked.current || !getMetaConsent()) return;
+
+    checkoutTracked.current = true;
+
+    trackMetaEvent("InitiateCheckout", {
+      content_ids: [String(page._id)],
+      content_type: "product",
+      currency: "BDT",
+      value: Number(page.pricing?.salePrice || 0) * quantity,
+      num_items: quantity
+    });
+  }
+
   function updateOrderCustomer(key, value) {
     setOrderCustomer(current => ({ ...current, [key]: value }));
+  }
+
+
+  function embedVideoUrl(url) {
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.toLowerCase();
+      const pathname = parsed.pathname;
+
+      const facebookHosts = [
+        "facebook.com",
+        "www.facebook.com",
+        "m.facebook.com",
+        "web.facebook.com"
+      ];
+
+      if (facebookHosts.includes(host)) {
+        const isFacebookVideo =
+          pathname.startsWith("/reel/") ||
+          pathname.startsWith("/videos/") ||
+          pathname.includes("/videos/") ||
+          pathname.startsWith("/watch");
+
+        if (isFacebookVideo) {
+          const clean = new URL(
+            pathname,
+            "https://www.facebook.com"
+          );
+
+          if (pathname.startsWith("/watch")) {
+            const videoId = parsed.searchParams.get("v");
+            if (videoId) {
+              clean.searchParams.set("v", videoId);
+            }
+          }
+
+          const embed = new URL(
+            "https://www.facebook.com/plugins/video.php"
+          );
+
+          embed.searchParams.set("href", clean.toString());
+          embed.searchParams.set("show_text", "false");
+          embed.searchParams.set("width", "560");
+          embed.searchParams.set("autoplay", "true");
+
+          return embed.toString();
+        }
+      }
+    } catch {
+      return "";
+    }
+
+    return youtubeEmbed(url);
   }
 
   function youtubeEmbed(url) {
@@ -240,7 +352,8 @@ export default function DynamicLandingPage() {
           body: JSON.stringify({
             clientRequestId: requestId,
             quantity,
-            customer: orderCustomer
+            customer: orderCustomer,
+            marketingConsent: getMetaConsent()
           })
         }
       );
@@ -252,6 +365,13 @@ export default function DynamicLandingPage() {
       }
 
       setOrderSuccess(result.data);
+
+      if (!result.duplicate && getMetaConsent()) {
+        trackMetaPurchase(result.data).catch(error => {
+          console.warn("Landing Purchase Pixel error:", error.message);
+        });
+      }
+
       sessionStorage.removeItem(storageKey);
     } catch (error) {
       setOrderError(error.message || "Please try again");
@@ -432,11 +552,11 @@ export default function DynamicLandingPage() {
 
             <div className="mpl-gallery-video-wrap">
               {page.video?.url ? (
-                youtubeEmbed(page.video.url) ? (
+                embedVideoUrl(page.video.url) ? (
                   <iframe
                     className="mpl-gallery-video-player"
                     title={`${page.title} product video`}
-                    src={youtubeEmbed(page.video.url)}
+                    src={embedVideoUrl(page.video.url)}
                     allow="autoplay; encrypted-media; picture-in-picture"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
@@ -545,6 +665,7 @@ export default function DynamicLandingPage() {
               <form
                 className="mpl-checkout-grid"
                 onSubmit={submitLandingOrder}
+                onFocusCapture={startCheckoutTracking}
               >
                 <div className="mpl-checkout-panel">
                   <h3>Customer Information</h3>
@@ -677,6 +798,30 @@ export default function DynamicLandingPage() {
                     <LockKeyhole size={19}/>
                     Cash on Delivery
                   </div>
+
+
+                  <label style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 9,
+                    fontSize: 12,
+                    lineHeight: 1.6,
+                    marginBottom: 16
+                  }}>
+                    <input
+                      type="checkbox"
+                      checked={marketingConsent}
+                      onChange={event => {
+                        const allowed = event.target.checked;
+                        setMarketingConsent(allowed);
+                        setMetaConsent(allowed);
+                      }}
+                    />
+                    <span>
+                      I agree to optional Meta marketing conversion tracking
+                      for this order.
+                    </span>
+                  </label>
 
                   {orderError && (
                     <p role="alert" className="mpl-checkout-error">
