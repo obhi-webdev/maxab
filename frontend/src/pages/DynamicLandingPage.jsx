@@ -138,6 +138,40 @@ export default function DynamicLandingPage() {
       window.removeEventListener("keydown", closeOnEscape);
   }, [zoomOpen]);
 
+  useEffect(() => {
+    function syncConsent() {
+      setMarketingConsent(getMetaConsent());
+    }
+
+    window.addEventListener("maxproduct-meta-consent-change", syncConsent);
+
+    return () => {
+      window.removeEventListener("maxproduct-meta-consent-change", syncConsent);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!page?._id || !marketingConsent) return;
+
+    const id = String(page._id);
+    if (trackedContent.current.has(id)) return;
+    trackedContent.current.add(id);
+
+    trackMetaEvent("ViewContent", {
+      content_ids: [id],
+      content_type: "product",
+      content_name: page.title,
+      contents: [{
+        id,
+        quantity: 1,
+        item_price: Number(page.pricing?.salePrice || 0)
+      }],
+      currency: "BDT",
+      value: Number(page.pricing?.salePrice || 0)
+    });
+  }, [page, marketingConsent]);
+
+
   if (loading) {
     return (
       <main className="mpl-state">
@@ -190,39 +224,6 @@ export default function DynamicLandingPage() {
   ];
 
 
-
-  useEffect(() => {
-    function syncConsent() {
-      setMarketingConsent(getMetaConsent());
-    }
-
-    window.addEventListener("maxproduct-meta-consent-change", syncConsent);
-
-    return () => {
-      window.removeEventListener("maxproduct-meta-consent-change", syncConsent);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!page?._id || !marketingConsent) return;
-
-    const id = String(page._id);
-    if (trackedContent.current.has(id)) return;
-    trackedContent.current.add(id);
-
-    trackMetaEvent("ViewContent", {
-      content_ids: [id],
-      content_type: "product",
-      content_name: page.title,
-      contents: [{
-        id,
-        quantity: 1,
-        item_price: Number(page.pricing?.salePrice || 0)
-      }],
-      currency: "BDT",
-      value: Number(page.pricing?.salePrice || 0)
-    });
-  }, [page, marketingConsent]);
 
   function startCheckoutTracking() {
     if (checkoutTracked.current || !getMetaConsent()) return;
@@ -282,8 +283,9 @@ export default function DynamicLandingPage() {
 
           embed.searchParams.set("href", clean.toString());
           embed.searchParams.set("show_text", "false");
+          embed.searchParams.set("allowfullscreen", "true");
           embed.searchParams.set("width", "560");
-          embed.searchParams.set("autoplay", "true");
+          embed.searchParams.set("autoplay", "false");
 
           return embed.toString();
         }
@@ -554,7 +556,11 @@ export default function DynamicLandingPage() {
               {page.video?.url ? (
                 embedVideoUrl(page.video.url) ? (
                   <iframe
-                    className="mpl-gallery-video-player"
+                    className={
+                      page.video.url.includes("facebook.com/reel/")
+                        ? "mpl-gallery-video-player mpl-facebook-reel"
+                        : "mpl-gallery-video-player"
+                    }
                     title={`${page.title} product video`}
                     src={embedVideoUrl(page.video.url)}
                     allow="autoplay; encrypted-media; picture-in-picture"

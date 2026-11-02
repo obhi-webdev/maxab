@@ -1,3 +1,4 @@
+import { sendMetaPurchase } from "../services/metaPurchase.js";
 import { randomBytes } from "node:crypto";
 import LandingPage from "../models/LandingPage.js";
 import LandingOrder from "../models/LandingOrder.js";
@@ -122,6 +123,45 @@ export async function createLandingOrder(req, res, next) {
         }
       }
       throw error;
+    }
+
+
+    // Only send after the new order has been saved.
+    // Marketing consent is optional.
+    if (req.body?.marketingConsent === true) {
+      try {
+        const origin = new URL(req.headers.origin || "");
+
+        if (origin.protocol === "https:") {
+          // Adapt LandingOrder to the existing CAPI service format.
+          const trackingOrder = {
+            orderNumber: order.orderNumber,
+            createdAt: order.createdAt,
+            customer: order.customer,
+            total: order.total,
+            items: [{
+              product: String(page._id),
+              quantity: order.quantity,
+              price: order.unitPrice
+            }]
+          };
+
+          await sendMetaPurchase(trackingOrder, {
+            consent: true,
+            sourceUrl:
+              `${origin.origin}/lp/${encodeURIComponent(page.slug)}`,
+            userAgent: req.headers["user-agent"],
+            ip: req.ip
+          });
+        } else {
+          console.info("Landing CAPI skipped: HTTPS required");
+        }
+      } catch (trackingError) {
+        console.error(
+          "Landing CAPI Purchase failed:",
+          trackingError.message
+        );
+      }
     }
 
     return res.status(201).json({
