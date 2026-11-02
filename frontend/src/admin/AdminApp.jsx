@@ -1,3 +1,4 @@
+import LandingOrdersInline from "./LandingOrdersInline";
 import OrderDetailsModal from "./components/OrderDetailsModal";
 import React, { useEffect, useState } from "react";
 import {
@@ -1060,6 +1061,8 @@ function OrdersPanel({ token }) {
           Showing {filtered.length} of {orders.length} recent orders
         </div>
       </div>
+
+      <LandingOrdersInline token={token}/>
 
       <OrderDetailsModal
         order={selectedOrder}
