@@ -1,3 +1,5 @@
+import DynamicLandingPage from "./pages/DynamicLandingPage";
+import LandingPageManager from "./admin/LandingPageManager";
 import "./services/metaPixel.js";
 import "./utils/siteFavicon.js";
 import "./styles/darkGreenTheme.css";
@@ -38,7 +40,11 @@ if (privatePage) {
 
 let page;
 
-if (path === "/admin/logo-settings") {
+if (path === "/admin/landing-pages") {
+  page = <LandingPageManager/>;
+} else if (path.startsWith("/lp/")) {
+  page = <DynamicLandingPage/>;
+} else if (path === "/admin/logo-settings") {
   page = <LogoSettings/>;
 } else if (path === "/admin/meta-tracking") {
   page = <MetaTrackingSettings/>;

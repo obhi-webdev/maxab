@@ -578,6 +578,9 @@ function Dashboard({ token, onLogout }) {
         <a href="/admin/meta-tracking" className="admin-sidebar-link">
           Meta Pixel & CAPI
         </a>
+        <a href="/admin/landing-pages" className="admin-sidebar-link">
+          Landing Pages
+        </a>
         <a href="/admin/product-images" className="admin-sidebar-link">
           Product Images
         </a>
