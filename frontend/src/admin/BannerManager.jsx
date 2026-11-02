@@ -16,7 +16,7 @@ const blank = {
 };
 
 export default function BannerManager() {
-  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
+  const token = (sessionStorage.getItem("MAXPRODUCT-admin-token") || localStorage.getItem("MAXPRODUCT-admin-token"));
   const [banners, setBanners] = useState([]);
   const [form, setForm] = useState(blank);
   const [editing, setEditing] = useState(null);

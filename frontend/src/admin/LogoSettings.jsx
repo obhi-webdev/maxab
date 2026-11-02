@@ -34,7 +34,7 @@ export default function LogoSettings() {
   const [error, setError] = useState("");
 
   // Keep original authentication key.
-  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
+  const token = (sessionStorage.getItem("MAXPRODUCT-admin-token") || localStorage.getItem("MAXPRODUCT-admin-token"));
 
   useEffect(() => {
     if (!token) {

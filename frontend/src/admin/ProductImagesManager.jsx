@@ -9,7 +9,7 @@ const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 const MAX_IMAGES = 12;
 
 export default function ProductImagesManager() {
-  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
+  const token = (sessionStorage.getItem("MAXPRODUCT-admin-token") || localStorage.getItem("MAXPRODUCT-admin-token"));
 
   const [products, setProducts] = useState([]);
   const [selected, setSelected] = useState("");

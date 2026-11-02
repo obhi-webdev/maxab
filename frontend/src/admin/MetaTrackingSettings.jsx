@@ -9,7 +9,7 @@ import "./metaTrackingSettings.css";
 const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
 export default function MetaTrackingSettings() {
-  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
+  const token = (sessionStorage.getItem("MAXPRODUCT-admin-token") || localStorage.getItem("MAXPRODUCT-admin-token"));
 
   const [pixelId, setPixelId] = useState("");
   const [accessToken, setAccessToken] = useState("");

@@ -28,7 +28,7 @@ async function api(path, token, options = {}) {
 }
 
 export default function CategoryManager() {
-  const token = sessionStorage.getItem("MAXPRODUCT-admin-token");
+  const token = (sessionStorage.getItem("MAXPRODUCT-admin-token") || localStorage.getItem("MAXPRODUCT-admin-token"));
 
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState(empty);
