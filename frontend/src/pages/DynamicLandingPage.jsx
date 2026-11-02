@@ -48,6 +48,19 @@ export default function DynamicLandingPage() {
   const [zoomOpen, setZoomOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  const [orderCustomer, setOrderCustomer] = useState({
+    name: "",
+    phone: "",
+    district: "",
+    address: "",
+    deliveryArea: "inside"
+  });
+  const [orderSending, setOrderSending] = useState(false);
+  const [orderError, setOrderError] = useState("");
+  const [orderSuccess, setOrderSuccess] = useState(null);
+  const [videoError, setVideoError] = useState(false);
+
+
   useEffect(() => {
     let active = true;
     const controller = new AbortController();
@@ -147,7 +160,12 @@ export default function DynamicLandingPage() {
     ? Math.round(((regular - selling) / regular) * 100)
     : 0;
 
-  const delivery = page.delivery || {};
+  const delivery = {
+    ...(page.delivery || {}),
+    freeDelivery: true,
+    insideDhaka: 0,
+    outsideDhaka: 0
+  };
   const features = (page.features || [])
     .filter(Boolean);
 
@@ -159,6 +177,88 @@ export default function DynamicLandingPage() {
     Sparkles,
     Truck,
   ];
+
+
+  function updateOrderCustomer(key, value) {
+    setOrderCustomer(current => ({ ...current, [key]: value }));
+  }
+
+  function youtubeEmbed(url) {
+    try {
+      const parsed = new URL(url);
+      const hostname = parsed.hostname.toLowerCase();
+
+      let id = "";
+
+      if (hostname === "youtu.be" || hostname === "www.youtu.be") {
+        id = parsed.pathname.slice(1).split("/")[0];
+      } else if (
+        ["youtube.com", "www.youtube.com", "m.youtube.com",
+         "youtube-nocookie.com", "www.youtube-nocookie.com"].includes(hostname)
+      ) {
+        id = parsed.searchParams.get("v") || "";
+        if (!id) {
+          const match = parsed.pathname.match(
+            /^\/(?:shorts|embed|live)\/([A-Za-z0-9_-]{11})/
+          );
+          id = match?.[1] || "";
+        }
+      }
+
+      if (/^[A-Za-z0-9_-]{11}$/.test(id)) {
+        return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&playsinline=1`;
+      }
+    } catch {
+      return "";
+    }
+
+    return "";
+  }
+
+  async function submitLandingOrder(event) {
+    event.preventDefault();
+
+    if (orderSending || orderSuccess) return;
+
+    setOrderError("");
+    setOrderSending(true);
+
+    try {
+      const storageKey = `MAXPRODUCT-lp-order-${slug}`;
+      let requestId = sessionStorage.getItem(storageKey);
+
+      if (!requestId) {
+        requestId = crypto.randomUUID();
+        sessionStorage.setItem(storageKey, requestId);
+      }
+
+      const response = await fetch(
+        `${API}/landing-pages/public/${encodeURIComponent(slug)}/orders`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clientRequestId: requestId,
+            quantity,
+            customer: orderCustomer
+          })
+        }
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Order submission failed");
+      }
+
+      setOrderSuccess(result.data);
+      sessionStorage.removeItem(storageKey);
+    } catch (error) {
+      setOrderError(error.message || "Please try again");
+    } finally {
+      setOrderSending(false);
+    }
+  }
 
   function selectRelativeImage(direction) {
     if (!images.length) return;
@@ -305,7 +405,7 @@ export default function DynamicLandingPage() {
               </div>
 
               <a className="mpl-primary-btn" href="#order-information">
-                অর্ডার সংক্রান্ত তথ্য
+                এখনই অর্ডার করুন
                 <ArrowRight size={19} />
               </a>
 
@@ -332,20 +432,39 @@ export default function DynamicLandingPage() {
 
             <div className="mpl-gallery-video-wrap">
               {page.video?.url ? (
-                <video
-                  key={page.video.url}
-                  src={page.video.url}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  controls
-                  preload="metadata"
-                  poster={images[0]?.url || undefined}
-                  aria-label={`${page.title} product video`}
-                >
-                  Your browser does not support video playback.
-                </video>
+                youtubeEmbed(page.video.url) ? (
+                  <iframe
+                    className="mpl-gallery-video-player"
+                    title={`${page.title} product video`}
+                    src={youtubeEmbed(page.video.url)}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    referrerPolicy="strict-origin-when-cross-origin"
+                  />
+                ) : (
+                  <>
+                    <video
+                      key={page.video.url}
+                      src={page.video.url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                      preload="auto"
+                      poster={images[0]?.url || undefined}
+                      onError={() => setVideoError(true)}
+                      onLoadedData={() => setVideoError(false)}
+                      aria-label={`${page.title} product video`}
+                    />
+                    {videoError && (
+                      <div className="mpl-video-error">
+                        ভিডিওটি চালু করা যাচ্ছে না।
+                        Dashboard-এর Video URL এবং MP4 Format পরীক্ষা করুন।
+                      </div>
+                    )}
+                  </>
+                )
               ) : (
                 <div className="mpl-gallery-video-empty">
                   <strong>Product Video Coming Soon</strong>
@@ -404,34 +523,186 @@ export default function DynamicLandingPage() {
           </div>
         </section>
 
+        
         <section className="mpl-order-section" id="order-information">
-          <div className="mpl-container mpl-order-card">
-            <div>
-              <span className="mpl-eyebrow">ORDER INFORMATION</span>
-              <h2>{page.title}</h2>
-              <p>
-                {delivery.cashOnDelivery
-                  ? "এই প্রোডাক্টের জন্য Cash on Delivery সক্রিয় রয়েছে।"
-                  : "এই প্রোডাক্টের জন্য Cash on Delivery সক্রিয় নেই।"}
-              </p>
-              <p className="mpl-order-delivery">
-                {delivery.freeDelivery
-                  ? "ডেলিভারি চার্জ: সম্পূর্ণ ফ্রি"
-                  : `ঢাকার ভেতরে ${money(delivery.insideDhaka)} | ঢাকার বাইরে ${money(delivery.outsideDhaka)}`}
-              </p>
+          <div className="mpl-container">
+            <div className="mpl-section-heading">
+              <span>SECURE CHECKOUT</span>
+              <h2>আপনার অর্ডার সম্পন্ন করুন</h2>
+              <p>সঠিক তথ্য দিয়ে ক্যাশ অন ডেলিভারি অর্ডার করুন।</p>
             </div>
 
-            <div className="mpl-order-summary">
-              <span>Quantity: {quantity}</span>
-              <strong>{money(selling * quantity)}</strong>
-              <small>ডেলিভারি চার্জ প্রযোজ্য হলে আলাদা যোগ হবে।</small>
-              <div className="mpl-unavailable">
-                অনলাইন অর্ডার ফর্ম এখনো সংযুক্ত হয়নি।
-                অর্ডার চালু হলে এখান থেকেই Checkout করা যাবে।
+            {orderSuccess ? (
+              <div className="mpl-order-success">
+                <Check size={42}/>
+                <h2>আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!</h2>
+                <p>অর্ডার নম্বর: <strong>{orderSuccess.orderNumber}</strong></p>
+                <p>সর্বমোট: <strong>{money(orderSuccess.total)}</strong></p>
+                <p>স্ট্যাটাস: Pending Confirmation</p>
+                <a href="/">ওয়েবসাইটে ফিরে যান</a>
               </div>
-            </div>
+            ) : (
+              <form
+                className="mpl-checkout-grid"
+                onSubmit={submitLandingOrder}
+              >
+                <div className="mpl-checkout-panel">
+                  <h3>Customer Information</h3>
+
+                  <label className="mpl-checkout-field">
+                    আপনার নাম *
+                    <input
+                      required
+                      minLength={2}
+                      maxLength={120}
+                      value={orderCustomer.name}
+                      onChange={e => updateOrderCustomer("name", e.target.value)}
+                      placeholder="আপনার সম্পূর্ণ নাম লিখুন"
+                    />
+                  </label>
+
+                  <label className="mpl-checkout-field">
+                    আপনার মোবাইল নাম্বার *
+                    <input
+                      required
+                      type="tel"
+                      inputMode="tel"
+                      pattern="(?:\+?88)?01[3-9][0-9]{8}"
+                      value={orderCustomer.phone}
+                      onChange={e => updateOrderCustomer("phone", e.target.value)}
+                      placeholder="01XXXXXXXXX"
+                    />
+                  </label>
+
+                  <label className="mpl-checkout-field">
+                    আপনার জেলা *
+                    <input
+                      required
+                      minLength={2}
+                      maxLength={100}
+                      value={orderCustomer.district}
+                      onChange={e => updateOrderCustomer("district", e.target.value)}
+                      placeholder="জেলার নাম লিখুন"
+                    />
+                  </label>
+
+                  <label className="mpl-checkout-field">
+                    আপনার সম্পূর্ণ ঠিকানা *
+                    <textarea
+                      required
+                      minLength={8}
+                      maxLength={500}
+                      rows={4}
+                      value={orderCustomer.address}
+                      onChange={e => updateOrderCustomer("address", e.target.value)}
+                      placeholder="বাসা, রোড, এলাকা, থানা ও পরিচিত স্থান"
+                    />
+                  </label>
+
+                  <fieldset className="mpl-checkout-delivery">
+                    <legend>ডেলিভারি লোকেশন নির্বাচন করুন *</legend>
+
+                    <label>
+                      <input
+                        type="radio"
+                        name="landingDelivery"
+                        value="inside"
+                        checked={orderCustomer.deliveryArea === "inside"}
+                        onChange={e => updateOrderCustomer(
+                          "deliveryArea", e.target.value
+                        )}
+                      />
+                      <span>ঢাকা সিটির মধ্যে</span>
+                      <strong>{money(delivery?.freeDelivery
+                        ? 0 : delivery?.insideDhaka)}</strong>
+                    </label>
+
+                    <label>
+                      <input
+                        type="radio"
+                        name="landingDelivery"
+                        value="outside"
+                        checked={orderCustomer.deliveryArea === "outside"}
+                        onChange={e => updateOrderCustomer(
+                          "deliveryArea", e.target.value
+                        )}
+                      />
+                      <span>ঢাকা সিটির বাইরে</span>
+                      <strong>{money(delivery?.freeDelivery
+                        ? 0 : delivery?.outsideDhaka)}</strong>
+                    </label>
+                  </fieldset>
+                </div>
+
+                <aside className="mpl-checkout-panel mpl-checkout-summary">
+                  <h3>আপনার অর্ডার</h3>
+
+                  <div className="mpl-checkout-product">
+                    {images[0] && (
+                      <img src={images[0].url} alt={page.title}/>
+                    )}
+                    <div>
+                      <strong>{page.title}</strong>
+                      <small>Quantity: {quantity}</small>
+                    </div>
+                  </div>
+
+                  <div className="mpl-checkout-total">
+                    <span>Product Subtotal</span>
+                    <strong>{money(selling * quantity)}</strong>
+                  </div>
+
+                  <div className="mpl-checkout-total">
+                    <span>Delivery Charge</span>
+                    <strong>{money(
+                      delivery?.freeDelivery ? 0 :
+                      orderCustomer.deliveryArea === "inside"
+                        ? delivery?.insideDhaka
+                        : delivery?.outsideDhaka
+                    )}</strong>
+                  </div>
+
+                  <div className="mpl-checkout-total mpl-checkout-grand">
+                    <span>মোট মূল্য</span>
+                    <strong>{money(
+                      selling * quantity +
+                      (delivery?.freeDelivery ? 0 :
+                        Number(orderCustomer.deliveryArea === "inside"
+                          ? delivery?.insideDhaka || 0
+                          : delivery?.outsideDhaka || 0))
+                    )}</strong>
+                  </div>
+
+                  <div className="mpl-checkout-cod">
+                    <LockKeyhole size={19}/>
+                    Cash on Delivery
+                  </div>
+
+                  {orderError && (
+                    <p role="alert" className="mpl-checkout-error">
+                      {orderError}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="mpl-checkout-submit"
+                    disabled={orderSending || !delivery?.cashOnDelivery}
+                  >
+                    {orderSending
+                      ? "অর্ডার সাবমিট হচ্ছে..."
+                      : "অর্ডার কনফার্ম করুন"}
+                  </button>
+
+                  <small>
+                    অর্ডারটি আমাদের টিম নিশ্চিত করার পর প্রক্রিয়াকরণ করা হবে।
+                  </small>
+                </aside>
+              </form>
+            )}
           </div>
         </section>
+
       </main>
 
       <Footer />
@@ -463,7 +734,7 @@ export default function DynamicLandingPage() {
           <strong>{money(selling)}</strong>
         </span>
         <span className="mpl-mobile-sticky-action">
-          অর্ডার তথ্য <ArrowRight size={17}/>
+          অর্ডার করুন <ArrowRight size={17}/>
         </span>
       </a>
     </div>

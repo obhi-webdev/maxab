@@ -1,3 +1,4 @@
+import LandingOrders from "./admin/LandingOrders";
 import DynamicLandingPage from "./pages/DynamicLandingPage";
 import LandingPageManager from "./admin/LandingPageManager";
 import "./services/metaPixel.js";
@@ -40,7 +41,9 @@ if (privatePage) {
 
 let page;
 
-if (path === "/admin/landing-pages") {
+if (path === "/admin/landing-orders") {
+  page = <LandingOrders/>;
+} else if (path === "/admin/landing-pages") {
   page = <LandingPageManager/>;
 } else if (path.startsWith("/lp/")) {
   page = <DynamicLandingPage/>;

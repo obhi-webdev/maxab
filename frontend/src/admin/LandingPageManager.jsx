@@ -17,7 +17,7 @@ const emptyForm = {
   videoUrl: "",
   regularPrice: "",
   salePrice: "",
-  freeDelivery: false,
+  freeDelivery: true,
   insideDhaka: "70",
   outsideDhaka: "130",
   cashOnDelivery: true,
@@ -101,7 +101,7 @@ function toPayload(form) {
       currency: "BDT",
     },
     delivery: {
-      freeDelivery: form.freeDelivery,
+      freeDelivery: true,
       insideDhaka: Number(form.insideDhaka || 0),
       outsideDhaka: Number(form.outsideDhaka || 0),
       cashOnDelivery: form.cashOnDelivery,

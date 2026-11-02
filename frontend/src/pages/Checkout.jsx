@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import "../styles/checkout.css";
+import "../styles/checkoutReference.css";
 
 const API = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
 
@@ -209,8 +210,8 @@ export default function Checkout() {
       <div className="checkout-container">
         <div className="checkout-heading">
           <span>SECURE CHECKOUT</span>
-          <h1>Complete Your Order</h1>
-          <p>Fill in your delivery information to place a COD order.</p>
+          <h1>আপনার অর্ডার সম্পন্ন করুন</h1>
+          <p>সঠিক তথ্য দিয়ে আপনার ক্যাশ অন ডেলিভারি অর্ডারটি নিশ্চিত করুন।</p>
         </div>
 
         {error && <div className="checkout-error">{error}</div>}
@@ -229,22 +230,22 @@ export default function Checkout() {
         ) : (
           <form className="checkout-grid" onSubmit={placeOrder}>
             <section className="checkout-panel">
-              <h2>Delivery Information</h2>
+              <h2>Customer Information</h2>
 
               <div className="checkout-field">
-                <label>Full Name *</label>
+                <label>আপনার নাম <em>*</em></label>
                 <input
                   required
                   minLength={2}
                   maxLength={120}
                   value={customer.name}
                   onChange={e => update("name", e.target.value)}
-                  placeholder="Your full name"
+                  placeholder="আপনার সম্পূর্ণ নাম লিখুন"
                 />
               </div>
 
               <div className="checkout-field">
-                <label>Mobile Number *</label>
+                <label>আপনার মোবাইল নাম্বার <em>*</em></label>
                 <input
                   required
                   type="tel"
@@ -257,19 +258,19 @@ export default function Checkout() {
               </div>
 
               <div className="checkout-field">
-                <label>District *</label>
+                <label>আপনার জেলা <em>*</em></label>
                 <input
                   required
                   minLength={2}
                   maxLength={100}
                   value={customer.district}
                   onChange={e => update("district", e.target.value)}
-                  placeholder="Mymensingh"
+                  placeholder="আপনার জেলার নাম লিখুন"
                 />
               </div>
 
               <div className="checkout-field">
-                <label>Complete Address *</label>
+                <label>আপনার সম্পূর্ণ ঠিকানা <em>*</em></label>
                 <textarea
                   required
                   minLength={8}
@@ -277,36 +278,65 @@ export default function Checkout() {
                   rows={4}
                   value={customer.address}
                   onChange={e => update("address", e.target.value)}
-                  placeholder="House, road, area, landmark..."
+                  placeholder="বাসা, রোড, এলাকা, থানা ও পরিচিত স্থান লিখুন"
                 />
               </div>
 
-              <div className="checkout-field">
-                <label>Delivery Area *</label>
-                <select
-                  value={customer.deliveryArea}
-                  onChange={e => update("deliveryArea", e.target.value)}
-                >
-                  <option value="inside">
-                    Inside City — ৳{deliveryRates?.inside ?? "..."}
-                  </option>
-                  <option value="outside">
-                    Outside City — ৳{deliveryRates?.outside ?? "..."}
-                  </option>
-                </select>
-              </div>
+              <fieldset className="mp-delivery-fieldset">
+                <legend>ডেলিভারি লোকেশন নির্বাচন করুন <em>*</em></legend>
+
+                <label className={`mp-delivery-choice ${
+                  customer.deliveryArea === "inside" ? "is-selected" : ""
+                }`}>
+                  <input
+                    type="radio"
+                    name="deliveryArea"
+                    value="inside"
+                    checked={customer.deliveryArea === "inside"}
+                    onChange={e => update("deliveryArea", e.target.value)}
+                  />
+                  <span className="mp-delivery-label">
+                    ঢাকা সিটির মধ্যে
+                  </span>
+                  <strong>
+                    {deliveryRates
+                      ? `৳${deliveryRates.inside}`
+                      : "লোড হচ্ছে..."}
+                  </strong>
+                </label>
+
+                <label className={`mp-delivery-choice ${
+                  customer.deliveryArea === "outside" ? "is-selected" : ""
+                }`}>
+                  <input
+                    type="radio"
+                    name="deliveryArea"
+                    value="outside"
+                    checked={customer.deliveryArea === "outside"}
+                    onChange={e => update("deliveryArea", e.target.value)}
+                  />
+                  <span className="mp-delivery-label">
+                    ঢাকা সিটির বাইরে
+                  </span>
+                  <strong>
+                    {deliveryRates
+                      ? `৳${deliveryRates.outside}`
+                      : "লোড হচ্ছে..."}
+                  </strong>
+                </label>
+              </fieldset>
 
               <div className="checkout-payment">
                 <LockKeyhole size={20}/>
                 <div>
-                  <strong>Cash on Delivery</strong>
-                  <p>Pay when your order is delivered.</p>
+                  <strong>ক্যাশ অন ডেলিভারি</strong>
+                  <p>প্রোডাক্ট হাতে পাওয়ার পর মূল্য পরিশোধ করুন।</p>
                 </div>
               </div>
             </section>
 
             <aside className="checkout-panel checkout-summary">
-              <h2>Order Summary</h2>
+              <h2>আপনার অর্ডারের বিবরণ</h2>
 
               {lines.map(item => (
                 <div className="checkout-line" key={item.id}>
@@ -360,11 +390,11 @@ export default function Checkout() {
                 className="checkout-submit"
                 disabled={sending || loading || invalid || !deliveryRates}
               >
-                {sending ? "Submitting Order..." : "Confirm COD Order"}
+                {sending ? "অর্ডার সাবমিট হচ্ছে..." : "অর্ডার কনফার্ম করুন"}
               </button>
 
               <p className="checkout-disclaimer">
-                Your order will remain pending until confirmed by the store.
+                অর্ডারটি যাচাইয়ের পর আমাদের টিম থেকে নিশ্চিত করা হবে।
               </p>
             </aside>
           </form>

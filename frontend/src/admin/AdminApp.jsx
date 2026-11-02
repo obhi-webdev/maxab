@@ -581,6 +581,10 @@ function Dashboard({ token, onLogout }) {
         <a href="/admin/landing-pages" className="admin-sidebar-link">
           Landing Pages
         </a>
+        <a href="/admin/landing-orders" className="admin-sidebar-link">
+          Landing Orders
+        </a>
+
         <a href="/admin/product-images" className="admin-sidebar-link">
           Product Images
         </a>
