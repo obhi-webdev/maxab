@@ -12,7 +12,7 @@ const API = (
 ).replace(/\/$/, "");
 
 const STATUSES = [
-  "all", "pending", "confirmed", "shipped",
+  "all", "pending", "confirmed", "hold", "shipped",
   "delivered", "cancelled"
 ];
 

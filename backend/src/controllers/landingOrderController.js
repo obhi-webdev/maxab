@@ -190,7 +190,7 @@ export async function listLandingOrders(req, res, next) {
 export async function changeLandingOrderStatus(req, res, next) {
   try {
     const allowed = [
-      "pending", "confirmed", "shipped", "delivered", "cancelled"
+      "pending", "confirmed", "hold", "shipped", "delivered", "cancelled"
     ];
 
     const status = req.body?.status;
