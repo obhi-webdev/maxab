@@ -1,14 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Search, RefreshCw, Copy, Check, Phone, MapPin,
+  Package, ChevronDown, ChevronUp, Trash2,
+  Truck, ClipboardCopy, ShoppingBag, Filter
+} from "lucide-react";
+import "./landingOrdersMobile.css";
 
 const API = (
   import.meta.env.VITE_API_URL ||
   "http://localhost:5001/api"
 ).replace(/\/$/, "");
 
-const money = value =>
-  `৳${Number(value || 0).toLocaleString("en-BD")}`;
+const STATUSES = [
+  "all", "pending", "confirmed", "shipped",
+  "delivered", "cancelled"
+];
 
-const transitions = {
+const TRANSITIONS = {
   pending: ["confirmed", "cancelled"],
   confirmed: ["shipped", "cancelled"],
   shipped: ["delivered"],
@@ -16,14 +24,80 @@ const transitions = {
   cancelled: []
 };
 
+const money = value =>
+  `৳${Number(value || 0).toLocaleString("en-BD")}`;
+
+const titleCase = text =>
+  String(text || "").replace(/^./, c => c.toUpperCase());
+
+const clean = value => String(value ?? "").trim();
+
+function fullAddress(customer = {}) {
+  return [
+    clean(customer.address),
+    clean(customer.deliveryArea),
+    clean(customer.district)
+  ].filter((v, index, arr) =>
+    v && arr.indexOf(v) === index
+  ).join(", ");
+}
+
+function orderText(order, courierOnly = false) {
+  const customer = order.customer || {};
+  const basic = [
+    `Name: ${clean(customer.name)}`,
+    `Phone: ${clean(customer.phone)}`,
+    `Address: ${fullAddress(customer)}`,
+    `COD Amount: ${money(order.total)}`
+  ];
+
+  if (courierOnly) return basic.join("\n");
+
+  return [
+    `Order: ${clean(order.orderNumber)}`,
+    ...basic,
+    `Product: ${clean(order.productTitle)}`,
+    `Quantity: ${order.quantity ?? 1}`,
+    `Unit Price: ${money(order.unitPrice)}`,
+    `Delivery Charge: ${money(order.deliveryCharge)}`,
+    `Status: ${titleCase(order.status)}`,
+    "Payment: Cash on Delivery"
+  ].join("\n");
+}
+
+async function copyToClipboard(value) {
+  if (navigator.clipboard?.writeText && window.isSecureContext) {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+
+  const field = document.createElement("textarea");
+  field.value = value;
+  field.style.position = "fixed";
+  field.style.opacity = "0";
+  document.body.appendChild(field);
+  field.focus();
+  field.select();
+
+  try {
+    if (!document.execCommand("copy")) {
+      throw new Error("Copy not supported");
+    }
+  } finally {
+    field.remove();
+  }
+}
+
 export default function LandingOrdersInline({ token }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
   const [saving, setSaving] = useState("");
   const [expanded, setExpanded] = useState("");
+  const [copied, setCopied] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -43,13 +117,15 @@ export default function LandingOrdersInline({ token }) {
 
       if (!response.ok || !result.success) {
         throw new Error(
-          result.message || `Orders API error ${response.status}`
+          result.message || `HTTP ${response.status}`
         );
       }
 
-      setOrders(result.data || []);
+      setOrders(
+        Array.isArray(result.data) ? result.data : []
+      );
     } catch (err) {
-      setError(err.message || "Unable to load landing orders");
+      setError(err.message || "Unable to load orders");
     } finally {
       setLoading(false);
     }
@@ -59,11 +135,75 @@ export default function LandingOrdersInline({ token }) {
     load();
   }, [load]);
 
-  async function changeStatus(order, status) {
-    if (!transitions[order.status]?.includes(status)) return;
+  const counts = useMemo(() => {
+    const output = Object.fromEntries(
+      STATUSES.map(status => [status, 0])
+    );
+    output.all = orders.length;
+
+    for (const order of orders) {
+      if (Object.hasOwn(output, order.status)) {
+        output[order.status] += 1;
+      }
+    }
+    return output;
+  }, [orders]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+
+    return orders
+      .filter(order => {
+        if (filter !== "all" && order.status !== filter) {
+          return false;
+        }
+
+        const customer = order.customer || {};
+
+        const text = [
+          order.orderNumber,
+          order.productTitle,
+          order.pageSlug,
+          customer.name,
+          customer.phone,
+          customer.address,
+          customer.district,
+          customer.deliveryArea
+        ].join(" ").toLowerCase();
+
+        return text.includes(q);
+      })
+      .sort((a, b) =>
+        new Date(b.createdAt || 0) -
+        new Date(a.createdAt || 0)
+      );
+  }, [orders, filter, search]);
+
+  async function copyValue(key, value) {
+    if (!clean(value)) {
+      setError("No information available to copy.");
+      return;
+    }
+
+    try {
+      await copyToClipboard(String(value));
+      setCopied(key);
+      setError("");
+      setNotice("Copied to clipboard.");
+    } catch {
+      setError(
+        "Copy failed. Use HTTPS or localhost and allow clipboard access."
+      );
+    }
+  }
+
+  async function changeStatus(order, nextStatus) {
+    if (!(TRANSITIONS[order.status] || []).includes(nextStatus)) {
+      return;
+    }
 
     if (!window.confirm(
-      `Change ${order.orderNumber} to ${status}?`
+      `Change ${order.orderNumber} to ${nextStatus}?`
     )) return;
 
     setSaving(order._id);
@@ -72,30 +212,30 @@ export default function LandingOrdersInline({ token }) {
 
     try {
       const response = await fetch(
-        `${API}/landing-pages/orders/${order._id}/status`,
+        `${API}/landing-pages/orders/${encodeURIComponent(order._id)}/status`,
         {
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ status })
+          body: JSON.stringify({ status: nextStatus })
         }
       );
 
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "Unable to update status"
-        );
+        throw new Error(result.message || "Status update failed");
       }
 
-      setNotice(
-        `${order.orderNumber} updated to ${status}.`
-      );
+      setOrders(current => current.map(item =>
+        item._id === order._id
+          ? { ...item, status: nextStatus }
+          : item
+      ));
 
-      await load();
+      setNotice(`${order.orderNumber}: ${titleCase(nextStatus)}`);
     } catch (err) {
       setError(err.message || "Status update failed");
     } finally {
@@ -103,16 +243,13 @@ export default function LandingOrdersInline({ token }) {
     }
   }
 
-
   async function deleteLandingOrder(order) {
     if (saving || order.status === "delivered") return;
 
-    const confirmed = window.confirm(
-      `Permanently delete landing order ${order.orderNumber}?\n\n` +
+    if (!window.confirm(
+      `Permanently delete ${order.orderNumber}?\n\n` +
       "This action cannot be undone."
-    );
-
-    if (!confirmed) return;
+    )) return;
 
     setSaving(order._id);
     setError("");
@@ -138,286 +275,338 @@ export default function LandingOrdersInline({ token }) {
       setOrders(current =>
         current.filter(item => item._id !== order._id)
       );
-
       setExpanded(current =>
         current === order._id ? "" : current
       );
-
-      setNotice(`${order.orderNumber} deleted successfully.`);
+      setNotice(`${order.orderNumber} deleted.`);
     } catch (err) {
-      setError(err.message || "Unable to delete landing order");
+      setError(err.message || "Delete failed");
     } finally {
       setSaving("");
     }
   }
 
-  const filtered = orders.filter(order => {
-    const text = [
-      order.orderNumber,
-      order.customer?.name,
-      order.customer?.phone,
-      order.customer?.district,
-      order.productTitle,
-      order.pageSlug
-    ].join(" ").toLowerCase();
-
-    return text.includes(search.trim().toLowerCase());
-  });
+  function CopyButton({ id, value, label = "Copy" }) {
+    return (
+      <button
+        type="button"
+        className="lmo-copy"
+        onClick={() => copyValue(id, value)}
+        title={`Copy ${label}`}
+      >
+        {copied === id ? <Check size={15}/> : <Copy size={15}/>}
+        {copied === id ? "Copied" : label}
+      </button>
+    );
+  }
 
   return (
-    <section
-      aria-label="Landing Page Orders"
-      style={{
-        marginTop: 32,
-        borderRadius: 16,
-        border: "1px solid #dde5ef",
-        background: "#ffffff",
-        padding: 20,
-        overflow: "hidden"
-      }}
-    >
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: 12,
-        marginBottom: 20
-      }}>
+    <section className="lmo" aria-label="Landing Page Orders">
+      <div className="lmo-head">
         <div>
-          <span style={{
-            display: "block",
-            color: "#b45309",
-            fontSize: 12,
-            fontWeight: 800,
-            marginBottom: 6
-          }}>
-            LANDING PAGE ORDERS
-          </span>
-
-          <h2 style={{ margin: "0 0 7px", fontSize: 23 }}>
-            Landing Page COD Orders ({orders.length})
-          </h2>
-
-          <p style={{ margin: 0, color: "#64748b" }}>
-            Orders from dynamic landing pages
-          </p>
+          <span className="lmo-eyebrow">MAXPRODUCT ADMIN</span>
+          <h2>Landing Page Orders</h2>
+          <p>Manage COD orders from all landing pages.</p>
         </div>
-
         <button
           type="button"
-          disabled={loading}
+          className="lmo-refresh"
+          disabled={loading || Boolean(saving)}
           onClick={load}
-          style={{
-            padding: "11px 16px",
-            border: "1px solid #cbd5e1",
-            borderRadius: 9,
-            background: "#f8fafc",
-            cursor: "pointer"
-          }}
         >
-          {loading ? "Loading..." : "Refresh Landing Orders"}
+          <RefreshCw size={17}/>
+          Refresh
         </button>
       </div>
 
+      <div className="lmo-summary">
+        <div>
+          <ShoppingBag size={19}/>
+          <span>Total Orders</span>
+          <strong>{counts.all}</strong>
+        </div>
+        <div>
+          <Package size={19}/>
+          <span>Pending</span>
+          <strong>{counts.pending}</strong>
+        </div>
+        <div>
+          <Truck size={19}/>
+          <span>Delivered</span>
+          <strong>{counts.delivered}</strong>
+        </div>
+      </div>
+
+      <div className="lmo-filter-heading">
+        <Filter size={17}/>
+        <strong>Filter by Status</strong>
+      </div>
+
+      <div className="lmo-filters" aria-label="Order status filters">
+        {STATUSES.map(status => (
+          <button
+            type="button"
+            key={status}
+            className={
+              "lmo-filter " +
+              (filter === status ? "is-active" : "")
+            }
+            aria-pressed={filter === status}
+            onClick={() => setFilter(status)}
+          >
+            {titleCase(status)}
+            <span>{counts[status]}</span>
+          </button>
+        ))}
+      </div>
+
+      <label className="lmo-search">
+        <Search size={19}/>
+        <input
+          type="search"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search order, name, phone, address..."
+        />
+      </label>
+
       {error && (
-        <p role="alert" style={{
-          background: "#fff1f2",
-          color: "#b42318",
-          padding: 13,
-          borderRadius: 8
-        }}>
+        <div className="lmo-alert lmo-error" role="alert">
           {error}
-        </p>
+        </div>
       )}
-
       {notice && (
-        <p role="status" style={{
-          background: "#ecfdf3",
-          color: "#087443",
-          padding: 13,
-          borderRadius: 8
-        }}>
+        <div className="lmo-alert lmo-notice" role="status">
           {notice}
-        </p>
+        </div>
       )}
 
-      <input
-        type="search"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        placeholder="Search landing order, phone, product..."
-        aria-label="Search landing page orders"
-        style={{
-          width: "100%",
-          padding: 12,
-          borderRadius: 9,
-          border: "1px solid #cbd5e1",
-          marginBottom: 18,
-          boxSizing: "border-box"
-        }}
-      />
+      <div className="lmo-list-heading">
+        <strong>{titleCase(filter)} Orders</strong>
+        <span>{filtered.length} results</span>
+      </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <table className="orders-table" style={{
-          minWidth: 850,
-          width: "100%"
-        }}>
-          <thead>
-            <tr>
-              <th>Order</th>
-              <th>Customer</th>
-              <th>Product / Source</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th>Details</th>
-            </tr>
-          </thead>
+      {loading && (
+        <div className="lmo-empty">Loading orders...</div>
+      )}
 
-          <tbody>
-            {filtered.map(order => (
-              <tr key={order._id}>
-                <td>
-                  <strong>{order.orderNumber}</strong>
+      {!loading && !error && filtered.length === 0 && (
+        <div className="lmo-empty">
+          No matching landing page orders.
+        </div>
+      )}
+
+      <div className="lmo-orders">
+        {filtered.map(order => {
+          const customer = order.customer || {};
+          const isOpen = expanded === order._id;
+          const busy = Boolean(saving);
+          const validPhone = /^[+0-9()\s-]+$/.test(
+            clean(customer.phone)
+          );
+
+          return (
+            <article className="lmo-card" key={order._id}>
+              <div className="lmo-card-top">
+                <div>
+                  <strong className="lmo-order-number">
+                    {order.orderNumber}
+                  </strong>
                   <small>
-                    {new Date(order.createdAt).toLocaleString("en-BD")}
+                    {order.createdAt
+                      ? new Date(order.createdAt)
+                          .toLocaleString("en-BD")
+                      : ""}
                   </small>
-                </td>
+                </div>
+                <span className={`lmo-badge lmo-${order.status}`}>
+                  {titleCase(order.status)}
+                </span>
+              </div>
 
-                <td>
-                  <strong>{order.customer?.name}</strong>
-                  <a href={`tel:${order.customer?.phone || ""}`}>
-                    {order.customer?.phone}
-                  </a>
-                  <small>{order.customer?.district}</small>
-                </td>
+              <div className="lmo-product">
+                <strong>{order.productTitle || "Product"}</strong>
+                <span>
+                  Qty: {order.quantity ?? 1}
+                  {" • "}
+                  {order.pageSlug || "Landing page"}
+                </span>
+              </div>
 
-                <td>
-                  <strong>{order.productTitle}</strong>
-                  <small>Quantity: {order.quantity}</small>
-                  <small>Landing Page: {order.pageSlug}</small>
-                </td>
+              <div className="lmo-customer">
+                <div className="lmo-info">
+                  <label>Customer Name</label>
+                  <div>
+                    <strong>{customer.name || "—"}</strong>
+                    <CopyButton
+                      id={`${order._id}-name`}
+                      value={customer.name}
+                    />
+                  </div>
+                </div>
 
-                <td>
+                <div className="lmo-info">
+                  <label>Phone Number</label>
+                  <div>
+                    <strong>{customer.phone || "—"}</strong>
+                    <span className="lmo-inline-actions">
+                      {validPhone && (
+                        <a
+                          className="lmo-call"
+                          href={`tel:${clean(customer.phone)}`}
+                          aria-label={`Call ${customer.phone}`}
+                        >
+                          <Phone size={15}/>
+                        </a>
+                      )}
+                      <CopyButton
+                        id={`${order._id}-phone`}
+                        value={customer.phone}
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                <div className="lmo-info">
+                  <label>Delivery Address</label>
+                  <div>
+                    <strong>
+                      {fullAddress(customer) || "—"}
+                    </strong>
+                    <CopyButton
+                      id={`${order._id}-address`}
+                      value={fullAddress(customer)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="lmo-amount">
+                <div>
+                  <span>COD Amount</span>
                   <strong>{money(order.total)}</strong>
-                  <small>
-                    Delivery: {money(order.deliveryCharge)}
-                  </small>
-                  <small>Cash on Delivery</small>
-                </td>
+                </div>
+                <small>
+                  Delivery: {money(order.deliveryCharge)}
+                </small>
+              </div>
 
-                <td>
-                  <strong>{order.status}</strong>
+              <div className="lmo-copy-actions">
+                <button
+                  type="button"
+                  className="lmo-copy-all"
+                  onClick={() => copyValue(
+                    `${order._id}-all`,
+                    orderText(order)
+                  )}
+                >
+                  <ClipboardCopy size={17}/>
+                  {copied === `${order._id}-all`
+                    ? "Copied!"
+                    : "Copy All Details"}
+                </button>
 
-                  {(transitions[order.status] || []).length > 0 && (
+                <button
+                  type="button"
+                  className="lmo-copy-courier"
+                  onClick={() => copyValue(
+                    `${order._id}-courier`,
+                    orderText(order, true)
+                  )}
+                >
+                  <Truck size={17}/>
+                  {copied === `${order._id}-courier`
+                    ? "Copied!"
+                    : "Copy Courier Info"}
+                </button>
+              </div>
+
+              <button
+                type="button"
+                className="lmo-details-toggle"
+                aria-expanded={isOpen}
+                onClick={() => setExpanded(
+                  isOpen ? "" : order._id
+                )}
+              >
+                {isOpen ? "Hide Order Management" : "Manage Order"}
+                {isOpen
+                  ? <ChevronUp size={18}/>
+                  : <ChevronDown size={18}/>}
+              </button>
+
+              {isOpen && (
+                <div className="lmo-details">
+                  <div className="lmo-detail-row">
+                    <span>District</span>
+                    <strong>{customer.district || "—"}</strong>
+                    <CopyButton
+                      id={`${order._id}-district`}
+                      value={customer.district}
+                    />
+                  </div>
+                  <div className="lmo-detail-row">
+                    <span>Delivery Area</span>
+                    <strong>{customer.deliveryArea || "—"}</strong>
+                  </div>
+                  <div className="lmo-detail-row">
+                    <span>Unit Price</span>
+                    <strong>{money(order.unitPrice)}</strong>
+                  </div>
+                  <div className="lmo-detail-row">
+                    <span>Subtotal</span>
+                    <strong>{money(order.subtotal)}</strong>
+                  </div>
+                  <div className="lmo-detail-row">
+                    <span>Payment</span>
+                    <strong>Cash on Delivery</strong>
+                  </div>
+
+                  <div className="lmo-status-control">
+                    <label htmlFor={`status-${order._id}`}>
+                      Change Order Status
+                    </label>
                     <select
+                      id={`status-${order._id}`}
                       value=""
-                      disabled={saving === order._id}
-                      onChange={e =>
-                        changeStatus(order, e.target.value)
+                      disabled={
+                        busy ||
+                        !(TRANSITIONS[order.status] || []).length
                       }
-                      aria-label={`Update ${order.orderNumber} status`}
-                      style={{
-                        display: "block",
-                        marginTop: 9,
-                        padding: 8,
-                        maxWidth: 160
+                      onChange={e => {
+                        if (e.target.value) {
+                          changeStatus(order, e.target.value);
+                        }
                       }}
                     >
-                      <option value="" disabled>Change Status</option>
-                      {transitions[order.status].map(status => (
+                      <option value="">Select Next Status</option>
+                      {(TRANSITIONS[order.status] || []).map(status => (
                         <option value={status} key={status}>
-                          {status}
+                          {titleCase(status)}
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  {order.status !== "delivered" && (
+                    <button
+                      type="button"
+                      className="lmo-delete"
+                      disabled={busy}
+                      onClick={() => deleteLandingOrder(order)}
+                    >
+                      <Trash2 size={16}/>
+                      {saving === order._id
+                        ? "Processing..."
+                        : "Delete Order"}
+                    </button>
                   )}
-                </td>
-
-                <td>
-
-                  <button
-                    type="button"
-                    disabled={Boolean(saving) || order.status === "delivered"}
-                    onClick={() => deleteLandingOrder(order)}
-                    title={order.status === "delivered"
-                      ? "Delivered orders cannot be deleted"
-                      : "Permanently delete this landing order"}
-                    style={{
-                      display: "block",
-                      marginTop: 8,
-                      padding: "8px 11px",
-                      background: "#fff1f2",
-                      color: "#be123c",
-                      borderRadius: 8,
-                      border: "1px solid #fecaca",
-                      fontWeight: 700,
-                      cursor: order.status === "delivered"
-                        ? "not-allowed" : "pointer",
-                      opacity: order.status === "delivered" ? 0.5 : 1
-                    }}
-                  >
-                    {saving === order._id ? "Processing..." : "Delete"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setExpanded(current =>
-                      current === order._id ? "" : order._id
-                    )}
-                    style={{
-                      padding: "8px 11px",
-                      background: "#f1f5f9",
-                      borderRadius: 8,
-                      border: "1px solid #cbd5e1",
-                      cursor: "pointer"
-                    }}
-                  >
-                    {expanded === order._id
-                      ? "Hide Details"
-                      : "View Details"}
-                  </button>
-
-                  {expanded === order._id && (
-                    <div style={{
-                      marginTop: 12,
-                      padding: 12,
-                      background: "#f8fafc",
-                      borderRadius: 9,
-                      minWidth: 200,
-                      whiteSpace: "normal",
-                      overflowWrap: "anywhere"
-                    }}>
-                      <strong>Delivery Address</strong>
-                      <p>{order.customer?.address}</p>
-                      <p>District: {order.customer?.district}</p>
-                      <p>
-                        Area: {order.customer?.deliveryArea}
-                      </p>
-                      <p>Unit Price: {money(order.unitPrice)}</p>
-                      <p>Subtotal: {money(order.subtotal)}</p>
-                      <p>Delivery: {money(order.deliveryCharge)}</p>
-                      <p>Total: {money(order.total)}</p>
-                      <p>Payment: COD</p>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+              )}
+            </article>
+          );
+        })}
       </div>
-
-      {loading && <p>Loading landing page orders...</p>}
-
-      {!loading && filtered.length === 0 && !error && (
-        <p style={{
-          padding: 24,
-          textAlign: "center",
-          color: "#64748b"
-        }}>
-          No landing page orders found.
-        </p>
-      )}
     </section>
   );
 }
