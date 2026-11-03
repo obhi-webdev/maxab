@@ -16,13 +16,16 @@ const STATUSES = [
   "delivered", "cancelled"
 ];
 
-const TRANSITIONS = {
-  pending: ["confirmed", "cancelled"],
-  confirmed: ["shipped", "cancelled"],
-  shipped: ["delivered"],
-  delivered: [],
-  cancelled: []
-};
+const TRANSITIONS = Object.fromEntries(
+  STATUSES
+    .filter(status => status !== "all")
+    .map(current => [
+      current,
+      STATUSES.filter(
+        next => next !== "all" && next !== current
+      )
+    ])
+);
 
 const money = value =>
   `৳${Number(value || 0).toLocaleString("en-BD")}`;

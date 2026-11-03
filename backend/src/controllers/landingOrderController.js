@@ -199,13 +199,12 @@ export async function changeLandingOrderStatus(req, res, next) {
       return fail(res, 400, "Invalid order status");
     }
 
-    const transitions = {
-      pending: ["confirmed", "cancelled"],
-      confirmed: ["shipped", "cancelled"],
-      shipped: ["delivered"],
-      delivered: [],
-      cancelled: []
-    };
+    const transitions = Object.fromEntries(
+      allowed.map(current => [
+        current,
+        allowed.filter(next => next !== current)
+      ])
+    );
 
     const order = await LandingOrder.findById(req.params.id);
 
