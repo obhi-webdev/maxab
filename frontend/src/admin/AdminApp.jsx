@@ -1,3 +1,4 @@
+import VisitorAnalytics from "./VisitorAnalytics.jsx";
 import LandingOrdersInline from "./LandingOrdersInline";
 import OrderDetailsModal from "./components/OrderDetailsModal";
 import React, { useEffect, useState } from "react";
@@ -579,6 +580,9 @@ function Dashboard({ token, onLogout }) {
         <a href="/admin/meta-tracking" className="admin-sidebar-link">
           Meta Pixel & CAPI
         </a>
+        <a className="admin-sidebar-link" href="#admin-visitor-analytics">
+          Visitor Analytics
+        </a>
         <a href="/admin/landing-pages" className="admin-sidebar-link">
           Landing Pages
         </a>
@@ -625,6 +629,8 @@ function Dashboard({ token, onLogout }) {
 
         {error && <div className="admin-error">{error}</div>}
         {notice && <div className="admin-notice">{notice}</div>}
+
+        <VisitorAnalytics token={token}/>
 
         <div className="admin-stat-grid">
           <div className="admin-stat">

@@ -1,3 +1,4 @@
+import visitorAnalyticsRoutes from "./routes/visitorAnalyticsRoutes.js";
 import landingPageRoutes from "./routes/landingPageRoutes.js";
 import sitemapRoutes from "./routes/sitemapRoutes.js";
 import siteBrandingRoutes from "./routes/siteBrandingRoutes.js";
@@ -78,6 +79,7 @@ app.use("/api/track-order", trackingRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/admin/product-images", productImagesRoutes);
+app.use("/api/visitor-analytics", visitorAnalyticsRoutes);
 app.use("/api/meta-settings", metaSettingsRoutes);
 app.use("/api/site-branding", siteBrandingRoutes);
 app.use(errorHandler);

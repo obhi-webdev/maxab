@@ -2,6 +2,7 @@ import LandingOrders from "./admin/LandingOrders";
 import DynamicLandingPage from "./pages/DynamicLandingPage";
 import LandingPageManager from "./admin/LandingPageManager";
 import "./services/metaPixel.js";
+import "./services/visitorAnalytics.js";
 import "./utils/siteFavicon.js";
 import "./styles/darkGreenTheme.css";
 import ProductPageLayout from "./pages/ProductPageLayout";
